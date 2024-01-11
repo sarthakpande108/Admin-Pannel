@@ -122,7 +122,7 @@
               <div class="relative" *ngIf="items.isActive == true">
                 <img
                   class="w-10 h-10 rounded-full inline-block"
-                  src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"
+                  [src]="getImageUrl(items.file)"
                   alt="Image remaining"
                 />
                 <span
@@ -133,7 +133,7 @@
               <div class="relative" *ngIf="items.isActive == false">
                 <img
                   class="w-10 h-10 rounded-full inline-block"
-                  src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"
+                  [src]="getImageUrl(items.file)" 
                   alt="Image remaining"
                 />
                 <span
@@ -152,11 +152,11 @@
             <div class="flex gap-2">
               <span
                 class="bg-gray-100 px-2 py-1 rounded-lg font-medium"
-                *ngFor="let permission of admin_permissions"
-                >{{ permission }}</span
+                *ngFor="let permission of getPermissions(items.admin_permissions)[0]"
+                >{{ permission.name }}</span
               >
-              <span class="bg-gray-100 px-2 py-1 rounded-lg font-medium"
-                >+5</span
+              <span *ngIf="getPermissions(items.admin_permissions)[1]>0" class="bg-gray-100 px-2 py-1 rounded-lg font-medium"
+                >+{{getPermissions(items.admin_permissions)[1]}}</span
               >
             </div>
           </td>
@@ -486,7 +486,7 @@
           </div> -->
           <!-- userPermissions -->
           <div *ngIf="disableForm1" class="multiSelect mt-3 flex ">
-            <div *ngFor="let permission of userPermissions" class=" text-[#3F83F8] bg-[#E1EFFE] border-0 rounded-sm py-[4px] px-[8px] mr-[5px] text-sm font-medium">{{permission}}</div>
+            <div *ngFor="let permission of getAllPermissions(userDetails.admin_permissions)" class=" text-[#3F83F8] bg-[#E1EFFE] border-0 rounded-lg py-[4px] px-[8px] mr-[5px] text-sm font-medium">{{permission.name}}</div>
           </div>
 
           <div *ngIf="!disableForm1" class="multiSelect mt-3">
@@ -496,8 +496,9 @@
               bindValue="id"
               [multiple]="true"
               [readonly]="false"
-              [(ngModel)]="selectedPermissionsData"
+              [(ngModel)]="selectedPermissionsData2"
               [disabled]="disableForm1"
+              (change)="onPermissionChangeEdit($event)"
               placeholder="Edit permissions here..."
             >
             </ng-select>
@@ -651,6 +652,19 @@
     </form>
   </div>
 </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- add user modal -->
 
 <div
@@ -664,7 +678,7 @@
     <form 
       
       [formGroup]="addAdminForm"
-      (submit)="onSubmitAddAdminForm()"
+      (ngSubmit)="onSubmitAddAdminForm()"
       class="relative bg-white rounded-lg shadow dark:bg-gray-700 p-5">
       <!-- Modal header -->
       <div
@@ -716,7 +730,7 @@
                   +Add Profile Photo <br />(Optional)
                 </p>
               </div>
-              <input id="dropzone-file" type="file" name="file" formControlName="file" class="hidden" />
+              <input id="dropzone-file" type="file" name="file" formControlName="file" class="hidden" (change)="onFileSelected($event)"/>
             </label>
           </div>
           <div class="w-[70%]">
@@ -914,6 +928,7 @@
             [readonly]="false"
             [addTag]="true"
             [(ngModel)]="selectedPermissions"
+            (change)="onPermissionChangeAdd($event)"
             placeholder="Add user permissions here"
           >
           </ng-select>

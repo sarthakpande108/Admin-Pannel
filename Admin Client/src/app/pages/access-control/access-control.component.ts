@@ -3,7 +3,9 @@ import { Flowbite } from 'src/app/flowbite.decorator';
 
 import { AccessControlService } from 'src/app/Services/access-control/access-control.service';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import * as bcrypt from 'bcryptjs';
 
 declare let $: any;
 
@@ -38,11 +40,15 @@ export class AccessControlComponent {
   adminsData: any = [];
   permissionsData: any = [];
   selectedPermissionsData: any = [];
+  selectedPermissionsData2: any = [];
   admin_permissions: any = [];
 
-  constructor(private accessControlService : AccessControlService){}
+  constructor(private accessControlService : AccessControlService, private formBuilder: FormBuilder){}
 
   ngOnInit(){
+
+    
+
     this.accessControlService.getAdmins().subscribe(data => {
       console.log(data?.data);
       this.adminsData = data?.data;
@@ -77,18 +83,34 @@ export class AccessControlComponent {
     phone_number: new FormControl('', [Validators.required, Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/)]),
     password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     confirm_password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
-    permissions: new FormControl([1,2,3]),
+    permissions: new FormControl([]),
     file: new FormControl(null),
   })
+
+
+
+  onPermissionChangeAdd(event:any){
+    this.selectedPermissionsData=event
+    console.log("selected permisssion",this.selectedPermissionsData)
+    this.addAdminForm.get('permissions')?.setValue(this.selectedPermissionsData);
+    console.log(this.addAdminForm.value);
+  }
 
 
   editAdminForm: FormGroup = new FormGroup({
     first_name: new FormControl(''),
     last_name: new FormControl(''),
     phone_number: new FormControl('', [Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/)]),
-    permissions: new FormControl([1,2,3]),
+    permissions: new FormControl([]),
     file: new FormControl(null),
   })
+
+  onPermissionChangeEdit(event:any){
+    this.selectedPermissionsData2=event
+    console.log("selected permisssion",this.selectedPermissionsData2)
+    this.editAdminForm.value.permissions=this.selectedPermissionsData2;
+    console.log(this.editAdminForm.value);
+   }
 
   verifyPasswordForm: FormGroup = new FormGroup({
     current_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
@@ -134,24 +156,67 @@ export class AccessControlComponent {
   }
 
 
-  onSubmitAddAdminForm() {
-    if (this.addAdminForm.valid) {
-      const data = this.addAdminForm.value;
-      console.log(data);
-      this.accessControlService.addAdmin(data).subscribe((response:any) => {
-        console.log('Admin posted successfully:', response);
-        this.clearAddAdminForm();
-        document.getElementById('closeAdminFormModel')?.click();
-        // this.router.navigate(['/']);
-      },
-      (error:any)=>{
-        console.log('error '+error.message);
+  // onSubmitAddAdminForm() {
+  //   if (this.addAdminForm.valid) {
+  //     const data = this.addAdminForm.value;
+  //     console.log(data);
+  //     this.accessControlService.addAdmin(data).subscribe((response:any) => {
+  //       console.log('Admin posted successfully:', response);
+  //       this.clearAddAdminForm();
+  //       document.getElementById('closeAdminFormModel')?.click();
+  //       // this.router.navigate(['/']);
+  //     },
+  //     (error:any)=>{
+  //       console.log('error '+error.message);
+  //     });
+  //     // console.log(data);
+  //   } else {
+  //     this.addAdminForm.markAllAsTouched();
+  //   }
+  // }
+
+  
+  onFileSelected(event: any): void {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.addAdminForm.patchValue({
+        file: fileInput.files[0]
       });
-      // console.log(data);
+    }
+  }
+
+  onSubmitAddAdminForm(): void {
+    if (this.addAdminForm.valid) {
+      const formData = new FormData();
+      formData.append('first_name', this.addAdminForm.get('first_name')?.value);
+      formData.append('last_name', this.addAdminForm.get('last_name')?.value);
+      formData.append('email', this.addAdminForm.get('email')?.value);
+      formData.append('phone_number', this.addAdminForm.get('phone_number')?.value);
+      formData.append('password', this.addAdminForm.get('password')?.value);
+      formData.append('confirm_password', this.addAdminForm.get('confirm_password')?.value);
+      formData.append('permissions', JSON.stringify(this.addAdminForm.get('permissions')?.value));
+
+      // Append file to FormData
+      const file = this.addAdminForm.get('file')?.value;
+      if (file instanceof File) {
+        formData.append('file', file);
+      }
+
+      this.accessControlService.addAdmin(formData).subscribe(
+        (response: any) => {
+          console.log('Admin posted successfully:', response);
+          this.clearAddAdminForm();
+          document.getElementById('closeAdminFormModel')?.click();
+        },
+        (error: any) => {
+          console.log('error ' + error.message);
+        }
+      );
     } else {
       this.addAdminForm.markAllAsTouched();
     }
   }
+
 
   onSubmitEditAdminForm() {
     if (this.editAdminForm.valid) {
@@ -236,6 +301,57 @@ export class AccessControlComponent {
 
 
 
+  // hashPassword(password: string) {
+  //   const saltRounds = 10;
+  //   bcrypt.hash(password, saltRounds, (err:any, hash:any) => {
+  //     if (!err) {
+  //       return hash;
+  //     } else {
+  //       console.error('Error hashing password:', err);
+  //     }
+  //   });
+  // }
+
+  // comparePasswords(candidatePassword: string, hashedPassword: string) {
+  //   bcrypt.compare(candidatePassword, hashedPassword, (err:any, result:bool) => {
+  //     if (!err) {
+  //       if (result) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     } else {
+  //       console.error('Error comparing passwords:', err);
+  //     }
+  //   });
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  getPermissions(jsonString: string) {
+    const arr = JSON.parse(jsonString).permissions;
+    return [arr.slice(0,4),arr.length-3];
+  }
+
+  getAllPermissions(jsonString: string) {
+    return JSON.parse(jsonString).permissions;
+  }
+  getImageUrl(filename: string){
+    return `http://localhost:3000/${filename}`
+  }
+
   
 
   enabelDisableForm(val:any) {
@@ -251,6 +367,7 @@ export class AccessControlComponent {
   verifiyOldPSWD(val:boolean) {
     this.pswdVerified = val
   }
+
   showUserDetails(val: boolean, data?: any) {
     this.userDetails = data;
     this.viewDetails = val;

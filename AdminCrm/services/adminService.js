@@ -56,8 +56,7 @@ exports.updateAdmin = async (adminDetails)=>{
             last_name: adminDetails.last_name,
             phone_number: adminDetails.phone_number,
             password: adminDetails.password,
-            admin_permissions: adminDetails.admin_permissions,
-            is_active: adminDetails.is_active
+            admin_permissions: adminDetails.admin_permissions
         },{
             where: {
                 id: adminDetails.id

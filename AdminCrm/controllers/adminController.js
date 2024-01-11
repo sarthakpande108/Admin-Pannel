@@ -1,6 +1,11 @@
 const adminService = require('../services/adminService');
 const {buildResponce} = require('../helpers/buildResponce');
 const { admin } = require('../models');
+// const bcrypt = require('bcryptjs');
+
+// const saltRounds = 10;
+// const salt = bcrypt.genSaltSync(saltRounds);
+
 
 
 exports.getAllAdmins = async (req, res) => {
@@ -38,6 +43,9 @@ exports.addAdmin = async (req, res) => {
     try {
         const { first_name, last_name, email, phone_number, password, permissions} = req.body;
         const { filename } = req.file || "";
+
+        // const hashedPassword = bcrypt.hashSync(password, salt);
+
 
         const adminDetails = {
             first_name: first_name,
@@ -82,17 +90,17 @@ exports.updateAdmin = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { first_name, last_name, email, phone_number, password, admin_permissions, is_active } = req.body;
+        const { first_name, last_name, phone_number, password, permissions } = req.body;
         
+        // const hashedPassword = bcrypt.hashSync(password, salt);
+
         const adminDetails = {
             id: id,
             first_name: first_name, 
-            last_name: last_name, 
-            email: email, 
+            last_name: last_name,
             phone_number: phone_number, 
             password: password, 
-            admin_permissions: admin_permissions, 
-            is_active: is_active
+            admin_permissions: {permissions: permissions}
         }
 
         const data = await adminService.updateAdmin(adminDetails);

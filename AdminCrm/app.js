@@ -34,6 +34,7 @@ const upload = multer({ storage: storage });
 
 // ----------------------------------------------------------------
 
+app.use(express.static('uploads')); 
 // app.use('/uploads', express.static('uploads'));
 
 
@@ -41,7 +42,9 @@ const upload = multer({ storage: storage });
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
-  
+
+
+
 
 app.use(require('./routes')(upload));
 
