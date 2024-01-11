@@ -1,0 +1,14 @@
+.modal-center {
+  position: fixed;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn-go-back:hover> svg,.btn-go-back:hover> span {
+    color: rgb(31 41 55);
+}
+::-webkit-scrollbar {
+    display: none;
+}

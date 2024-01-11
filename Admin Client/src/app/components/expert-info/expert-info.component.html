@@ -1,0 +1,446 @@
+<!-- Expert info -->
+<div class="p-3 md:p-6 mt-2.5 lg:mt-5 bg-white rounded-lg">
+  <div class="">
+    <!-- profile image and description -->
+    <div class="flex gap-2 lg:gap-5 items-start w-full">
+      <img
+        src="../../../../../assets/assets/expert/profile/profile-pic.jpg"
+        alt=""
+        class="w-[5rem] h-[5rem] md:w-[6rem] md:h-[6rem] xl:w-[8rem] xl:h-[8rem] object-cover rounded-lg"
+      />
+
+      <div class="flex flex-col w-full justify-between gap-3">
+        <div class="">
+          <div class="">
+            <span class="text-xl md:text-2xl font-semibold text-black"
+              >{{ expertInfo?.username }}
+            </span>
+          </div>
+          <p class="text-sm text-gray">
+            Headline: {{ expertInfo?.introduction }}
+          </p>
+        </div>
+        <p class="text-xs text-gray text-justify">
+          {{ expertInfo?.about }}
+        </p>
+      </div>
+    </div>
+
+    <!-- section heading info-->
+
+    <div *ngIf="preferredSmeData.length > 0" class="">
+      <div class="flex flex-row items-center gap-3 w-full mt-5">
+        <span class="text-lg font-semibold text-black"
+          >Subject Matter Expert</span
+        >
+      </div>
+      <!-- section content -->
+      <hr class="w-full h-1.5 my-2" />
+      <div class="w-full mt-2 pl-5">
+        <div class="flex flex-row gap-x-2 whitespace-nowrap flex-wrap gap-y-2">
+          <span
+            *ngFor="let item of preferredSmeData"
+            class="px-3 py-1.5 text-sm bg-blue-100 rounded-md text-blue-500 cursor-pointer capitalize"
+            >{{ item.name }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <!-- section heading info-->
+    <div *ngIf="preferredIndustriesData.length > 0" class="">
+      <div class="flex flex-row items-center gap-3 w-full mt-5">
+        <span class="text-lg font-semibold text-black"
+          >Preferred Industries</span
+        >
+      </div>
+      <!-- section content -->
+      <hr class="w-full h-1.5 my-2" />
+      <div class="w-full mt-2 pl-5">
+        <div class="flex flex-row gap-x-2 whitespace-nowrap flex-wrap gap-y-2">
+          <span
+            *ngFor="let item of preferredIndustriesData"
+            class="px-3 py-1.5 text-sm bg-blue-100 rounded-md text-blue-500 cursor-pointer capitalize"
+            >{{ item.name }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <!-- section heading info-->
+    <div class="flex flex-row items-center gap-3 w-full mt-5">
+      <span class="text-lg font-semibold text-black">Information</span>
+      <!-- <span class="w-full"
+            ><hr class="h-1 mt-2 border-gray-300 w-full"
+          /></span> -->
+    </div>
+    <!-- section content -->
+    <hr class="w-full h-1.5 my-2" />
+    <div class="w-full mt-2 pl-5">
+      <div class="flex flex-row gap-x-2 w-full text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Gender</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.gender == 0 ? "Male" : "Female" }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">
+          Preferred Language
+        </p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          :
+          <span
+            class=""
+            *ngFor="let lang of preferredLanguageData; let last = last"
+          >
+            {{ lang.name }}{{ !last ? ", " : "" }}
+          </span>
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Primary Email</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.email }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Secondary Email</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.alternate_email }}
+        </p>
+      </div>
+
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Contact No.</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.contact }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Alternate No.</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.alternate_contact }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Country</p>
+        <p class="w-[60%] text-black font-semibold leading-8">: India</p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Address</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.address }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">City</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.city }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">State</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.state }}
+        </p>
+      </div>
+      <div class="w-full flex text-sm">
+        <p class="w-[40%] text-gray font-normal leading-8">Pincode</p>
+        <p class="w-[60%] text-black font-semibold leading-8">
+          : {{ expertInfo?.pincode }}
+        </p>
+      </div>
+    </div>
+
+    <!-- section heading work expeience-->
+
+    <div *ngIf="workExperienceData.length > 0" class="">
+      <div class="flex flex-row items-center w-full mt-5">
+        <span class="text-lg font-semibold text-black whitespace-nowrap"
+          >Work Experience</span
+        >
+        <!-- <span class="w-full"
+            ><hr class="h-1 mt-2 border-gray-300 w-full"
+          /></span> -->
+      </div>
+      <!-- section content -->
+      <div class="" *ngFor="let item of workExperienceData">
+        <hr class="w-full h-1.5 my-2" />
+        <div class="w-full mt-2 pl-5">
+          <div class="">
+            <p class="text-xs text-gray">Company Name</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.company_name }}
+            </p>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Job Title</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.job_title }}
+            </p>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Job Description</p>
+            <p class="text-sm text-black text-justify">
+              {{ item.description }}
+            </p>
+          </div>
+          <div class="flex w-full gap-2.5 mt-4">
+            <div class="mb-5 w-1/2">
+              <p class="text-xs text-gray-500">Time Period</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.start_date }}
+                {{ item.end_date != " " ? "-" : "" }} {{ item.end_date }}
+              </p>
+            </div>
+            <div class="mb-5 w-1/2">
+              <p class="text-xs capitalize text-gray-500">currently working</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.currently_working == 1 ? "Yes" : "No" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- section heading Education-->
+    <div *ngIf="educationData.length > 0" class="">
+      <div class="flex flex-row items-center w-full mt-5">
+        <span class="text-lg font-semibold text-black">Education</span>
+        <!-- <span class="w-full"
+            ><hr class="h-1 mt-2 border-gray-300 w-full"
+          /></span> -->
+      </div>
+      <!-- section content -->
+      <div class="" *ngFor="let item of educationData">
+        <hr class="w-full h-1.5 my-2" />
+        <div class="w-full mt-2 pl-5">
+          <div class="">
+            <p class="text-xs text-gray">Institute Name</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.institute_name }}
+            </p>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Degree Title</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.degree_title }}
+            </p>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-xs text-gray">Description</p>
+            <p class="text-sm text-black text-justify">
+              {{ item.description }}
+            </p>
+          </div>
+          <div class="flex w-full gap-2.5 mt-4">
+            <div class="mb-5 w-1/2">
+              <p class="text-xs text-gray-500">Time Period</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.start_date }}
+                {{ item.end_date != " " ? "-" : "" }} {{ item.end_date }}
+              </p>
+            </div>
+            <div class="mb-5 w-1/2">
+              <p class="text-xs capitalize text-gray-500">currently studying</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.currently_studying == 1 ? "Yes" : "No" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- section heading Education 2-->
+
+    <div *ngIf="certificationData.length > 0" class="">
+      <div class="flex flex-row items-center w-full mt-5">
+        <span class="text-lg font-semibold text-black">Certification</span>
+        <!-- <span class="w-full"
+            ><hr class="h-1 mt-2 border-gray-300 w-full"
+          /></span> -->
+      </div>
+      <!-- section content -->
+      <div class="" *ngFor="let item of certificationData">
+        <hr class="w-full h-1.5 my-2" />
+        <div class="w-full mt-2 pl-5">
+          <div class="">
+            <p class="text-xs text-gray">Certificate Name</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.certification_name }}
+            </p>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Issuing Organization</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.issuing_organization }}
+            </p>
+          </div>
+          <div class="flex w-full gap-2.5 mt-4">
+            <div class="mb-5 w-1/2">
+              <p class="text-xs text-gray-500">Time Period</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.start_date }}
+                {{ item.end_date != " " ? "-" : "" }} {{ item.end_date }}
+              </p>
+            </div>
+            <div class="mb-5 w-1/2">
+              <p class="text-xs capitalize text-gray-500">does expires</p>
+              <p class="text-sm font-semibold capitalize">
+                {{ item.does_expires == 1 ? "Yes" : "No" }}
+              </p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Certification URL</p>
+            <p class="text-sm text-black font-semibold mt-2">
+              <span
+                class="py-1 px-2 rounded-lg text-xs cursor-pointer bg-gray-50 text-gray"
+                ><img
+                  src="../../../assets/assets/icons/link.svg"
+                  alt=""
+                  class="mr-2 inline-block"
+                />{{ item.certification_url }}</span
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- section heading Publication -->
+    <div *ngIf="publicationData.length > 0" class="">
+      <div class="flex flex-row items-center w-full mt-5">
+        <span class="text-lg font-semibold text-black">Publication</span>
+        <!-- <span class="w-full"
+            ><hr class="h-1 mt-2 border-gray-300 w-full"
+          /></span> -->
+      </div>
+      <!-- section content -->
+      <div class="" *ngFor="let item of publicationData">
+        <hr class="w-full h-1.5 my-2" />
+        <div class="w-full mt-2 pl-5">
+          <div class="">
+            <p class="text-xs text-gray">Publication Details</p>
+            <p class="text-sm text-black font-semibold">
+              {{ item.publication_details }}
+            </p>
+          </div>
+          <div class="mt-4">
+            <p class="text-xs text-gray">Certification URL</p>
+            <p class="text-sm text-black font-semibold mt-2">
+              <span
+                class="py-1 px-2 rounded-lg text-xs cursor-pointer bg-gray-50 text-gray"
+                ><img
+                  src="../../../assets/assets/icons/link.svg"
+                  alt=""
+                  class="mr-2 inline-block"
+                />{{ item.publication_url }}</span
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- section heading Privacy -->
+    <div class="flex flex-row items-center gap-3 w-full mt-5">
+      <span class="text-lg font-semibold text-black">Privacy </span>
+      <span class="w-full"><hr class="h-1 mt-2 border-gray-300 w-full" /></span>
+    </div>
+    <!-- section content -->
+    <div class="flex w-full mt-5 pl-5">
+      <div class="w-[40%]">
+        <p class="text-sm text-gray">Privacy Status</p>
+      </div>
+      <div class="w-[60%]">
+        <p class="text-sm font-semibold text-black">: Private</p>
+      </div>
+    </div>
+
+    <!-- section heading assign level -->
+    <div class="flex flex-row items-center gap-3 w-full mt-5">
+      <span class="text-lg font-semibold text-black whitespace-nowrap"
+        >Assign Level
+      </span>
+      <span class="w-full"><hr class="h-1 mt-2 border-gray-300 w-full" /></span>
+    </div>
+
+    <ul
+      class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex mt-5"
+    >
+      <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+        <div class="flex items-center pl-3">
+          <input
+            id=""
+            type="radio"
+            value=""
+            name="list-radio"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+          />
+          <label
+            for="horizontal-list-radio-license"
+            class="w-full py-3 ml-2 text-sm font-medium text-gray-900"
+            >Primary
+          </label>
+        </div>
+      </li>
+      <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+        <div class="flex items-center pl-3">
+          <input
+            id=""
+            type="radio"
+            value=""
+            name="list-radio"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+          />
+          <label
+            for="horizontal-list-radio-license"
+            class="w-full py-3 ml-2 text-sm font-medium text-gray-900"
+            >Intermediate
+          </label>
+        </div>
+      </li>
+      <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+        <div class="flex items-center pl-3">
+          <input
+            id=""
+            type="radio"
+            value=""
+            name="list-radio"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+          />
+          <label
+            for="horizontal-list-radio-license"
+            class="w-full py-3 ml-2 text-sm font-medium text-gray-900"
+            >Premium
+          </label>
+        </div>
+      </li>
+    </ul>
+
+    <!-- footer section -->
+    <div class="w-full mt-20">
+      <hr class="h-1 border-gray-500 w-full" />
+      <div class="flex justify-between items-center w-full mt-5">
+        <span class="text-black hidden font-semibold md:inline-block text-lg"
+          >Verify Expert</span
+        >
+        <div class="flex flex-row text-center">
+          <span
+            (click)="updateVerificationStatus(0)"
+            class="inline-flex items-center cursor-pointer text-gray bg-gray ml-2 text-gray-400 text-xs font-medium mr-2 px-2 py-1 rounded-lg hover:scale-110"
+          >
+            Unverified Expert
+          </span>
+
+          <span
+            (click)="updateVerificationStatus(1)"
+            class="inline-flex items-center cursor-pointer hover:scale-110 bg-blue ml-2 text-primary text-xs font-medium mr-2 px-2 py-1 rounded-lg"
+          >
+            Verified Expert
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

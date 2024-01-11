@@ -1,0 +1,59 @@
+.modal-center {
+  position: fixed;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.multiSelect ::ng-deep .ng-select-disabled .ng-select-container{
+    background-color: white !important;
+    border: none !important;
+    font-size: 1rem;
+    color: black;
+    padding: 0;
+    border-radius: 0;
+    
+}
+.multiSelect ::ng-deep .ng-select-disabled .ng-arrow-wrapper{
+  display: none !important;
+}
+
+.multiSelect ::ng-deep .ng-select-disabled .ng-select-container:hover {
+  box-shadow: none !important;
+}
+.multiSelect ::ng-deep .ng-select-disabled .ng-option.ng-option-marked{
+ background-color:#EBF5FF !important;
+} 
+.multiSelect ::ng-deep .ng-select-disabled .ng-option:hover{
+ background-color:#EBF5FF !important;
+} 
+.multiSelect ::ng-deep .ng-select-disabled .ng-value-container{
+  padding-left: 0 !important;
+}
+.multiSelect ::ng-deep .ng-placeholder{
+  top: 10px !important;
+}
+.multiSelect ::ng-deep .ng-select-container .ng-value-container .ng-value{
+  border-radius: 4px !important;
+  background-color:#E1EFFE !important;
+  color: #3f83f8 !important;
+  font-size: 14px !important;
+  padding: 4px 8px !important;
+  font-weight: 500 !important;
+
+}
+.multiSelect ::ng-deep .ng-select-container{
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  background-size: 0.75em 0.75em;
+border-radius: 0.5rem;
+min-height: 45.6px;
+}
+.btn-go-back:hover> svg,.btn-go-back:hover> span {
+    color: rgb(31 41 55);
+}

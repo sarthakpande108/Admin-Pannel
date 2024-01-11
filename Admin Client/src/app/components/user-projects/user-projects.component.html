@@ -1,0 +1,249 @@
+<div class="w-full flex justify-between gap-2 mb-3 items-center">
+  <div class="title flex items-center">
+    <img
+      src="../../../assets/assets/your project/element-4.svg"
+      alt=""
+      class="inline-block h-6 w-6"
+    /><span class="text-xl font-semibold ml-2 capitalize">Your Projects</span>
+  </div>
+  <div class="flex gap-3 btn-group items-center max-h-max mt-2">
+    <span
+      class="self-center py-1 px-3 rounded-[37px] font-medium text-sm bg-blue-500 text-white cursor-pointer capitalize"
+    >
+      In Progress</span
+    >
+    <span
+      class="self-center py-1 px-3 rounded-[37px] text-zinc-600 font-medium text-sm border-zinc-400 border cursor-pointer capitalize"
+      >Completed</span
+    >
+  </div>
+</div>
+<hr class="h-1 w-full" />
+
+<div
+  class="flex flex-col xl:flex-row gap-2.5 lg:gap-5 w-full mt-2.5 lg:mt-5 h-max"
+>
+  <div class="w-full xl:w-2/3 grid grid-cols-2 gap-2.5 lg:gap-5 h-max">
+    <div class="bg-white col-span-2 p-4 rounded-lg">
+      <h2 class="text-lg font-medium">ABC</h2>
+      <p class="text-sm text-gray-400 mt-3">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam ad iusto
+        molestias corporis, ea ab laudantium consequuntur deserunt libero, eius
+        nesciunt perspiciatis. Ipsam, quia fuga.
+      </p>
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4 mb-2">
+        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+      </div>
+      <div class="grid grid-cols-4 mb-4">
+        <p class="text-sm font-medium capitalize text-center">create</p>
+        <p class="text-sm font-medium text-gray-400 capitalize text-center">
+          post
+        </p>
+        <p class="text-sm font-medium text-gray-400 capitalize text-center">
+          invite expert
+        </p>
+        <p class="text-sm font-medium text-gray-400 capitalize text-center">
+          invite expert
+        </p>
+      </div>
+      <hr class="h-1.5 w-full" />
+      <div class="flex flex-row justify-between w-full mt-4">
+        <p class="text-sm font-medium">
+          Invite expert to review your project and submit patch
+        </p>
+        <img
+          src="../../../assets/assets/your project/arrow-narrow-right.svg"
+          alt=""
+          class=""
+        />
+      </div>
+    </div>
+
+    <div
+      class="bg-white border col-span-2 xl:col-span-1 border-gray-200 rounded-lg min-h-96 h-max p-4 relative"
+      *ngFor="let items of projectDetails"
+    >
+      <div class="flex flex-row justify-between items-start">
+        <div class="flex flex-row gap-4">
+          <img src="{{ items.img }}" alt="" class="h-12 w-12" />
+          <div class="">
+            <p class="text-md font-bold">{{ items.name }}</p>
+            <p class="text-xs text-zinc-500 font-normal">{{ items.date }}</p>
+          </div>
+        </div>
+        <div class="cursor-pointer">
+          <span class="mt-2">
+            <img
+              class="h-6 w-6"
+              src="../../.././assets/assets/your project/more-square.svg"
+              alt=""
+              srcset=""
+            />
+          </span>
+        </div>
+      </div>
+
+      <div class="my-5">
+        <div class="flex w-full capitalize gap-2 text-xs">
+          <div class="w-[45%]">
+            <span class="text-gray-400">product sector</span>
+          </div>
+          <div class="w-[55%]">
+            <span class="font-medium">{{ ": " + items.productSector }}</span>
+          </div>
+        </div>
+        <div class="flex w-full capitalize gap-2 text-xs">
+          <div class="w-[45%]">
+            <span class="text-gray-400">project organization type</span>
+          </div>
+          <div class="w-[55%]">
+            <span class="font-medium">{{
+              ": " + items.projectOrganization
+            }}</span>
+          </div>
+        </div>
+        <div class="flex w-full capitalize gap-2 text-xs">
+          <div class="w-[45%]">
+            <span class="text-gray-400">project phase</span>
+          </div>
+          <div class="w-[55%]">
+            <span class="font-medium">{{ ": " + items.projectPhase }}</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-justify text-sm font-normal">
+        {{ items.description.substring(0, 200) }}
+      </p>
+      <div class="flex w-full overflow-x-auto gap-3 my-4">
+        <span
+          class="rounded-full bg-gray-100 text-gray-400 px-3 py-0.5 capitalize whitespace-nowrap min-w-max text-sm"
+          *ngFor="let item of items.materialUsed"
+          >{{ item }}</span
+        >
+      </div>
+
+      <div class="mt-5">
+        <p
+          class="text-sm rounded-lg font-normal p-5 text-justify bg-[#FDFDEA] text-[#C27803]"
+        >
+          <span class="font-semibold">Note:</span>{{ items.note }}
+        </p>
+      </div>
+      <div class="flex justify-between mt-5 items-center">
+        <div class="flex -space-x-4">
+          <img
+            class="w-10 h-10 border-2 border-white rounded-full"
+            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+            alt=""
+          />
+          <img
+            class="w-10 h-10 border-2 border-white rounded-full"
+            src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+            alt=""
+          />
+          <img
+            class="w-10 h-10 border-2 border-white rounded-full"
+            src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+            alt=""
+          />
+          <a
+            class="flex items-center justify-center w-10 h-10 text-xs font-medium text-blue-400 bg-blue-200 border-2 border-white rounded-full hover:bg-blue-300"
+            href="#"
+            >+99</a
+          >
+        </div>
+        <button
+          class="py-1 px-3 text-center rounded-md bg-blue-500 text-white"
+          type="button"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+    <div
+      class="col-span-2 w-full border border-[3px] border-dashed cursor-pointer rounded-lg flex flex-col items-center justify-center py-5 h-max"
+    >
+      <img
+        src="../../../assets/assets/your project/add-square.png"
+        alt=""
+        class="hover:scale-110"
+      />
+      <p class="text-lg font-semibold capitalize text-gray-400">add project</p>
+    </div>
+  </div>
+  <div class="w-full xl:w-1/3 h-max">
+    <div class="flex flex-col w-full gap-2.5 lg:gap-5">
+      <div class="bg-white p-4 rounded-lg">
+        <div class="flex flex-row justify-between">
+          <p class="text-lg font-semibold">FAQ's</p>
+          <p class="text-sm text-blue-400 underline capitalize cursor-pointer">
+            see all FAQ's
+          </p>
+        </div>
+        <hr class="h1 w-full my-2" />
+        <div class="p-5 w-full h-max" *ngFor="let faq of faqData">
+          <div class="flex justify-between items-center gap-x-3">
+            <div>
+              <h1 class="font-medium text-justify text-base">
+                {{ faq.id + "." }} {{ faq.question }}
+              </h1>
+            </div>
+            <div>
+              <button
+                class="btn bg-transparent bottom-0"
+                (click)="showAnswer(faq.id)"
+              >
+                <span
+                  id="icon-{{ faq.id }}"
+                  class="material-symbols-rounded text-gray-400 text-[20px] plus-icon"
+                >
+                  add
+                </span>
+              </button>
+            </div>
+          </div>
+          <div id="answer-{{ faq.id }}" class="answer-div hidden border-t-2">
+            <p class="mt-3 text-sm text-justify font-light">{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg h-max">
+        <div class="flex flex-row justify-between" (click)="showAccordion()">
+          <p class="text-lg font-semibold capitalize">
+            <img
+              src="../../../assets/assets/your project/file.svg"
+              alt=""
+              class="inline-block"
+            />
+            Confidential assured
+          </p>
+          <i
+            id="icon"
+            class="bi bi-chevron-up font-bold text-[20px] cursor-pointer"
+          ></i>
+        </div>
+        <div id="accordion-content" class="content-div mt-3 hidden border-t-2">
+          <p class="mt-3 text-sm text-justify font-light">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
+            qui veritatis praesentium corporis nam a et fuga beatae ex impedit!
+          </p>
+
+          <ul class="list-disc p-3">
+            <div class="" *ngFor="let items of confidentialAssured">
+              <li class="font-medium text-justify text-base mt-2">
+                {{ items.question }}
+              </li>
+              <p class="mt-3 text-sm text-justify font-light">
+                {{ items.answer }}
+              </p>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="grid grid-cols-2"> -->
+</div>
+
+<!-- </div> -->

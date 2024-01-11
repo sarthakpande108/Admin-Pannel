@@ -1,0 +1,39 @@
+.modal-center {
+  position: fixed;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.btn-go-back:hover> svg,.btn-go-back:hover> span {
+    color: rgb(31 41 55);
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* ::ng-deep .ngx-pagination {
+  border: 1px solid rgb(146, 146, 146);
+  border-radius: 5px;
+}
+::ng-deep .ngx-pagination .current{
+  color:rgb(28 100 242);
+  background-color: rgb(185, 185, 255);
+}
+::ng-deep .ngx-pagination li{
+  border-right: 1px solid rgb(146, 146, 146);
+  margin-right: 0 !important;
+}
+
+::ng-deep .ngx-pagination .pagination-next a:after, .ngx-pagination .pagination-next.disabled:after {
+  content: none !important;
+}
+
+::ng-deep .ngx-pagination .pagination-previous a:before, .ngx-pagination .pagination-previous.disabled:before{
+  content: none !important;
+}
+
+::ng-deep .ngx-pagination .pagination-next a:after, .ngx-pagination .pagination-next.disabled:after{
+  display: none !important;
+  content: none !important;
+} */

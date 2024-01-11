@@ -1,0 +1,159 @@
+<div class="master-layout flex relative overflow-hidden ">
+<div class=" bg-white sideBar p-5 md:p-3 lg:p-5 xl:p-8 border-r relative">
+<div class="logo pb-5 border-b">
+    <div class=" flex justify-center">
+        <img class="w-[3rem] h-[3rem] hidden md:block lg:hidden" src="../../../assets/assets/logo/logoIcons.svg" alt="">
+        <img class="w-[9rem] block md:hidden lg:block" src="../../../assets/assets/logo/logo.png" alt="">
+    </div>
+</div>
+<!--  -->
+<div class="overflow-hidden h-full">
+<div class="menu-links overflow-y-auto overflow-x-hidden h-full scrollbar-hidden pb-[5rem]">
+    <ul class="flex flex-col mt-5 gap-y-5 lg:gap-y-7 text-gray-400">
+        <li *ngFor="let items of navMenuLinks">
+            <ng-container *ngIf="!items.hasSubmenu,else submenu">
+            <a class="item-link flex md:justify-center lg:justify-start items-center p-3  w-full relative  rounded-lg" (click)="closeMobileMenu()" attr.data-tooltip-target="tooltip-{{items.id}}" data-tooltip-placement="right"  routerLink="{{items.url}}" routerLinkActive="active" [routerLinkActiveOptions]="{exact:
+                true}">
+                <div class=" lg:ms-3 xl:ms-5">
+                    <div class="flex items-center ">
+                        <div>
+                            <img class="icon" src="{{items.icon}}" alt="">
+                        </div>
+                        <span class="menu-link-text ms-2 capitalize truncate lg:max-w-[9rem] xl:max-w-[10rem]">{{items.name}}</span>
+                    </div>
+                </div>
+            </a>
+            <div id="tooltip-{{items.id}}" role="tooltip" class="hidden lg:hidden absolute text-xs z-10 invisible md:inline-block whitespace-nowrap px-3 py-2  font-light text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                {{items.name}}
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+        </ng-container>
+        <ng-template #submenu>
+        <a id="{{items.id}}-sumenu-parent" class="  submenu-parent-item-link flex w-full  rounded-lg cursor-pointer" attr.data-tooltip-target="tooltip-{{items.id}}" data-tooltip-placement="right" >
+            <div class=" w-full lg:ms-3 xl:ms-5">
+                <div class=" flex items-center justify-between w-full p-3" (click)="toggleSubmenu(items.id)" attr.data-tooltip-target="tooltip-{{items.id}}" data-tooltip-placement="right">
+                    <div class="flex items-center">
+                        <img class="icon" src="{{items.icon}}" alt="">
+                        <span class="menu-link-text ms-2 capitalize truncate max-w-[8rem] lg:max-w-[8.5rem] xl:max-w-[10rem]">{{items.name}}</span>
+                    </div>
+                    <div class="submenu-icon-div">
+                        <i id="{{items.id}}-submenu-arrow-icon" class="submenu-icon fa-solid fa-angle-down text-sm"></i>
+                    </div>
+                </div>
+                <div id="{{items.id}}-submenu" class=" submenu p-3">
+                    <ul class="gap-y-3">
+                        <li class="submenu-links md:mb-3 lg:mt-0" *ngFor="let links of items.submenu">
+                            <a class="submenu-item-link  p-2 md:p-0 lg:p-2 flex rounded {{links.status}}" (click)="closeMobileMenu()" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="active" routerLink="{{links.url}}" attr.data-tooltip-target="tooltip-submenu-{{links.id}}-{{items.id}}" data-tooltip-placement="right">
+                                <div class="w-full">
+                                    <div class="flex  items-center justify-between " title="{{links.name}}">
+                                        <span class="ps-3 lg:p-0 submenu-link-text capitalize min-w-[7rem] max-w-[7rem] lg:min-w-[7rem] lg:max-w-[7rem]  xl:min-w-[9.3rem] xl:max-w-[9.3rem] truncate text-base text-start">{{links.name}}</span>
+                                        <div>
+                                            <img class="icon" src="{{links.icon}}" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div id="tooltip-submenu-{{links.id}}-{{items.id}}" role="tooltip" class="hidden lg:hidden absolute text-xs z-10 invisible md:inline-block whitespace-nowrap px-3 py-2  font-light text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                {{links.name}}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </a>
+        <div id="tooltip-{{items.id}}" role="tooltip" class="hidden lg:hidden absolute text-xs z-10 invisible md:inline-block whitespace-nowrap px-3 py-2  font-light text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            {{items.name}}
+            <div class="tooltip-arrow" data-popper-arrow></div>
+        </div>
+    </ng-template>
+    </li>
+    </ul>
+
+
+</div>
+</div>
+<!--  -->
+<!--  -->
+<div class="menuExpand-icon lg:hidden">
+    <button class="md:flex justify-center items-center border bg-white hidden" (click)="openMenu()">
+        <i  class="fa-solid fa-chevron-right expand-icon text-xs"></i>
+    </button>
+    <button class="flex md:hidden justify-center items-center border bg-white p-3" (click)="closeMobileMenu()">
+        <i class="fa-solid fa-xmark expand-icon text-xs"></i>
+    </button>
+</div>
+</div>
+<!-- -------------- -->
+<div class="main-wrapper overflow-hidden w-full">
+    <!-- navbar -->
+    <div class="navbar">
+        <nav class="w-full bg-white p-5 flex justify-between items-center h-[5rem] border-b">
+            <div class=" px-2 rounded-full bg-gray-100 md:flex items-center hidden">
+                <span><img class="w-[1.5rem]" src="../../../assets/assets/icons/search-icon.svg" alt=""></span>
+                <input type="text" class="w-[20rem]  border-0 bg-transparent" placeholder="search">
+            </div>
+            <div class="md:hidden">
+                <button (click)="openMobileMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            <div class="md:hidden">
+                <img class="w-[8rem]" src="../../../assets/assets/logo/logo.png" alt="">
+            </div>
+            <div>
+                <button id="dropdownDelayButton" data-dropdown-toggle="dropdownDelay" data-dropdown-delay="500"
+                    data-dropdown-trigger="hover" class="border-0 bg-white" type="button">
+                    <div class="flex">
+                        <div class="w-[2.5rem] h-[2.5rem] rounded-full overflow-hidden">
+                            <img class="w-full h-full object-cover"
+                                src="https://www.wilsoncenter.org/sites/default/files/styles/large/public/media/images/person/james-person-1.jpg"
+                                alt="">
+                        </div>
+                        <div class=" hidden md:block ms-2 text-start text-sm text-gray-900 dark:text-white">
+                            <div class="font-semibold text-base">Amit Jadhwar</div>
+                            <div class="truncate mt-[-3px] text-gray-500">Admin</div>
+                        </div>
+                    </div>
+                </button>
+        
+                <!-- Dropdown menu -->
+                <div id="dropdownDelay"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg border w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <div class="p-3 text-sm text-gray-900 dark:text-white">
+                        <div>Amit</div>
+                        <div class="font-medium truncate">amit@productry.com</div>
+                    </div>
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformationButton">
+                       
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                      
+                    </ul>
+                    <div class="py-2">
+                        <a href="#"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            (click)="logout()">Sign
+                            out</a>
+                    </div>
+                </div>
+        
+        
+        
+            </div>
+        </nav>
+    </div>
+    <!-- navbar -->
+    <div  class="main-container bg-gray-100 p-[10px] lg:p-[20px]   overflow-hidden h-full">
+        <div class="overflow-y-scroll overflow-x-hidden h-full">
+           <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+<!-- ------------- -->
+</div>
+
+<div class="overlay" (click)="closeMobileMenu()"></div>
+

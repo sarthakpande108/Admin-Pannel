@@ -1,0 +1,205 @@
+
+.sideBar {
+  width: 20rem;
+  height: 100vh;
+  font-size: 19px;
+  font-weight: 500;
+  transition: all .3s ease-in-out;
+}
+.menu-links .icon {
+  width: 28px;
+  height: 28px;
+}
+.submenu {
+  display: none;
+}
+
+.visibleSubmenu {
+  background: #f3f4f6;
+}
+.item-link.active {
+  background: #f3f4f6;
+  color: black;
+}
+.item-link {
+  transition: all 0.3s ease-in-out;
+}
+.item-link:hover {
+  color: #4b5563;
+}
+.submenu-item-link {
+  transition: all 0.3s ease-in-out;
+}
+.submenu-item-link:hover {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+.submenu-item-link .menu-link-text:hover {
+  color: #4b5563;
+}
+.submenu-icon,.expand-icon {
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+.submenu-icon.active{
+    transform: rotate(180deg);
+}
+.submenu-parent-item-link.active .menu-link-text{
+    color: #4b5563 !important;
+}
+.expand-icon.open{
+    transform: rotate(180deg);
+}
+/*  */
+.menuExpand-icon{
+    position: absolute;
+    right: -.8rem;
+    top: 4.3rem;
+}
+.menuExpand-icon button{
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+}
+.main-container{
+  height: calc(100vh - 5rem);
+  width: 100%;
+}
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.473);
+  z-index: 5;
+  display: none;
+}
+.submenu-item-link.active{
+  background-color: #3f83f8;
+  color: white;
+}
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .sideBar {
+      width: 18rem;
+      position: absolute;
+      top: 0;
+      z-index: 10;
+      left: -19rem;
+      }
+      .sideBar.menu-open{
+        left: 0;
+      }
+      .item-link.active::after {
+        content: "";
+        position: absolute;
+        width: 0.5rem;
+        height: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        background-color: #3f83f8;
+        border-top-left-radius: 0;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+      }
+
+
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .sideBar {
+        width: 5rem;
+        position: relative;
+        z-index: 10;
+      }
+      .sideBar.open{
+        width: 15rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .menu-link-text{
+        display: none;
+        font-size: medium;
+      }
+      .submenu-icon-div , .submenu-link-text{
+        display: none;
+      }
+      .item-link.active::after {
+        content: "";
+        position: absolute;
+        width: 2rem;
+        height: .5rem;
+        bottom: 0;
+        transform: translateX(-50%);
+        left: 50%;
+        background-color: #3f83f8;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+      }
+      .sideBar.open .item-link{
+        justify-content: start;
+      }
+      .sideBar.open .menu-link-text ,.sideBar.open .submenu-link-text{
+        display: block;
+      }
+      .sideBar.open .submenu-icon-div{
+        display: block;
+      }
+      .sideBar.open .item-link.active::after {
+        content: "";
+        position: absolute;
+        width: 0.5rem !important;
+        height: 2rem !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        left: 0 !important;
+        background-color: #3f83f8;
+        border-top-left-radius: 0;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+      }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .sideBar {
+        width: 15rem;
+      }
+      .menu-link-text,.submenu-link-text,.submenu-icon-div{
+        display: block;
+      }
+    .item-link.active::after {
+        content: "";
+        position: absolute;
+        width: 0.5rem;
+        height: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        background-color: #3f83f8;
+        border-top-left-radius: 0;
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+      }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .sideBar {
+        width: 20rem;
+      }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}

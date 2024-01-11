@@ -1,0 +1,18 @@
+.btn-go-back:hover> svg,.btn-go-back:hover> span {
+    color: rgb(31 41 55);
+}
+.switch-tabs .tab-active{color: white;background: #3F83F8;}
+.tabs-btn > span.active{
+    color: black;
+    text-decoration: underline;
+}
+.show-more-btn{
+    color: #1C64F2 !important;
+     background:none;
+}
+#accordion-collaps:not(.collapse) { 
+    background-color: gray;
+}
+::-webkit-scrollbar {
+    display: none;
+}

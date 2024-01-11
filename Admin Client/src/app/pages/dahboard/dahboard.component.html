@@ -1,0 +1,45 @@
+<!-- header cards -->
+<div class="grid  md:grid-cols-2 xl:grid-cols-3 gap-2.5 lg:gap-5">
+    <div class="flex justify-between bg-white rounded-lg items-center p-4 ">
+        <div class="felx flex-col">
+            <img src="../../../../assets/assets/icons/user-group.svg" alt="" class="">
+            <p class="text-sm text-gray-500">Number of Users</p>
+        </div>
+        <p class="text-[35px] text-blue-500 font-bold">260</p>
+    </div>
+    <div class="flex justify-between bg-white rounded-lg items-center p-4">
+        <div class="felx flex-col">
+            <img src="../../../../assets/assets/icons/bag-tick-2.png" alt="" class="">
+            <p class="text-sm text-gray-500">Number of Experts</p>
+        </div>
+        <p class="text-[35px] text-blue-500 font-bold">260</p>
+    </div>
+    <div class="flex justify-between bg-white rounded-lg items-center p-4">
+        <div class="felx flex-col">
+            <img src="../../../../assets/assets/icons/bag-tick-2.png" alt="imf" class="">
+            <p class="text-sm text-gray-500">Number of Projects</p>
+        </div>
+        <p class="text-[35px] text-blue-500 font-bold">260</p>
+    </div>
+</div>
+
+
+<!-- expert and user details card -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 lg:gap-5 mt-2.5 lg:mt-5">
+    <div class="bg-white rounded-lg p-4 min-h-[512px]">
+        <h3 class="text-lg font-bold">No. Experts by Industries</h3>
+        <hr class="h-1 my-2">
+        <div class="flex justify-between space-x-5 w-full mb-3" *ngFor="let items of expertByIndustries">
+            <p class="text-sm font-semibold text-gray-500 text-wrap w-[80%] word-break">{{items.industry}}</p>
+            <p class="text-base font-bold">{{items.count}}</p>
+        </div>
+    </div>
+    <div class="bg-white rounded-lg p-4 min-h-[412px]">
+        <h3 class="text-lg font-bold">No. Experts by Subject</h3>
+        <hr class="h-1 my-2">
+        <div class="flex justify-between  w-full mb-3" *ngFor="let items of expertBySubject">
+            <p class="text-sm font-semibold text-gray-500 ">{{items.industry}}</p>
+            <span class="text-base font-bold">{{items.count}}</span>
+        </div>
+    </div>
+</div>
