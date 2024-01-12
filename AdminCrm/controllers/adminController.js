@@ -63,7 +63,7 @@ exports.addAdmin = async (req, res) => {
                 {
                     error: false,
                     message: "Admin added successfully! ",
-                    data: ''
+                    data: data
                 })
         } else {
             buildResponce(res, 200,

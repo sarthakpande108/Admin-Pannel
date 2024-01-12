@@ -1,9 +1,10 @@
-
 import { Flowbite } from 'src/app/flowbite.decorator';
 
 import { AccessControlService } from 'src/app/Services/access-control/access-control.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { environment } from 'src/app/environments/environment';
 
 import * as bcrypt from 'bcryptjs';
 
@@ -16,6 +17,7 @@ declare let $: any;
   styleUrls: ['./access-control.component.css']
 })
 export class AccessControlComponent {
+  assetUrl: string = environment.assetUrl;
   selectedPermissions!: number;
   selectedGivenPermissions!: number;
   viewDetails: boolean = false;
@@ -23,17 +25,11 @@ export class AccessControlComponent {
   userPermissions: any;
   pswdVerified: boolean = true
   disableForm1: boolean = true
-  permissions = [
-    { id: 1, name: 'Dashboard' },
-    { id: 2, name: 'User Data' },
-    { id: 3, name: 'Expert Data' },
-    { id: 4, name: 'Project Data' },
+  permissions:any = [
+   
   ];
   givenPermissions = [
-    { id: 1, name: 'Dashboard' },
-    { id: 2, name: 'User Data' },
-    { id: 3, name: 'Expert Data' },
-    { id: 4, name: 'Project Data' },
+   
   ];
 
 
@@ -42,45 +38,50 @@ export class AccessControlComponent {
   selectedPermissionsData: any = [];
   selectedPermissionsData2: any = [];
   admin_permissions: any = [];
+  accessControlForm!: FormGroup;
+  constructor(private accessControlService : AccessControlService, private fb: FormBuilder){}
 
-  constructor(private accessControlService : AccessControlService, private formBuilder: FormBuilder){}
-
-  ngOnInit(){
-
+  ngOnInit() {
     
+    this.accessControlForm = this.fb.group({
+      'first_name': ['', [Validators.required]],
+      'last_name': ['', [Validators.required]],
+      'email': ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
+      'phone_number': ['', [Validators.required]],
+      'password': ['', Validators.required],
+      'confirm_password': ['', Validators.required], 
+      'permissions': ['', Validators.required], 
+      'file': ['']
 
-    this.accessControlService.getAdmins().subscribe(data => {
-      console.log(data?.data);
-      this.adminsData = data?.data;
-
-      // const admin_permissions = this.adminsData.map((admin:any)=>{
-      //   return JSON.parse(admin.admin_permissions);
-      // });
-
-      // const admin_permissions2 = admin_permissions.map((admin:any)=>{
-      //   return admin.map((i:any, index:number)=>{
-      //     return this.permissionsData[index];
-      //   });
-      // })
-      // console.log(admin_permissions2);
-      // this.admin_permissions = JSON.parse(data?.data.admin_permissions).permissions;
     });
-
-
+//  this.accessControlService.getAdmins().subscribe((data:any) => {
+//       console.log(data?.data);
+//     });
+  this.getAllPermissions()
     
-    this.accessControlService.getPermissions().subscribe(data => {
-      console.log(data?.data);
-      this.permissionsData = data?.data;
-    });
+   
   }
 
+  getAllPermissions() {
+    this.accessControlService.getPermissions().subscribe((data: any) => {
 
+      this.permissionsData = [];
+      this.permissionsData = data?.data;
+      console.log(this.permissionsData);
+      console.log(data.data);
+    });
+
+    
+
+  }
+
+   
 
   addAdminForm: FormGroup = new FormGroup({
     first_name: new FormControl('', [Validators.required]),
     last_name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]),
-    phone_number: new FormControl('', [Validators.required, Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/)]),
+    phone_number: new FormControl('', [Validators.required, Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (](\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s$/)]),
     password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     confirm_password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     permissions: new FormControl([]),
@@ -100,7 +101,7 @@ export class AccessControlComponent {
   editAdminForm: FormGroup = new FormGroup({
     first_name: new FormControl(''),
     last_name: new FormControl(''),
-    phone_number: new FormControl('', [Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/)]),
+    phone_number: new FormControl('', [Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (](\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s$/)]),
     permissions: new FormControl([]),
     file: new FormControl(null),
   })
@@ -175,13 +176,11 @@ export class AccessControlComponent {
   //   }
   // }
 
-  
   onFileSelected(event: any): void {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      this.addAdminForm.patchValue({
-        file: fileInput.files[0]
-      });
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.accessControlForm.patchValue({ file });
     }
   }
 
@@ -207,6 +206,47 @@ export class AccessControlComponent {
           console.log('Admin posted successfully:', response);
           this.clearAddAdminForm();
           document.getElementById('closeAdminFormModel')?.click();
+        },
+        (error: any) => {
+          console.log('error ' + error.message);
+        }
+      );
+    } else {
+      this.addAdminForm.markAllAsTouched();
+    }
+  }
+
+
+  addAccessControl(): void {
+    console.log(this.accessControlForm.valid)
+    console.log(this.accessControlForm)
+    if (this.accessControlForm.valid) {
+      const formData = new FormData();
+      let {first_name, last_name, email, phone_number, password, permissions, file} = this.accessControlForm.value
+      formData.append('first_name', first_name);
+      formData.append('last_name', last_name);
+      formData.append('email', email);
+      formData.append('phone_number', phone_number);
+      formData.append('password', password);
+      formData.append('permissions', permissions);
+      // formData.append('file', file, file.name);
+
+      formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
+
+
+
+      // // Append file to FormData
+      // const file = this.addAdminForm.get('file')?.value;
+      // if (file instanceof File) {
+      //   formData.append('file', file);
+      // }
+
+      this.accessControlService.addAdmin(formData).subscribe(
+        (response: any) => {
+          console.log('Admin posted successfully:', response);
+          this.accessControlForm.reset()
+          // this.clearAddAdminForm();
+          // document.getElementById('closeAdminFormModel')?.click();
         },
         (error: any) => {
           console.log('error ' + error.message);
@@ -345,12 +385,10 @@ export class AccessControlComponent {
     return [arr.slice(0,4),arr.length-3];
   }
 
-  getAllPermissions(jsonString: string) {
-    return JSON.parse(jsonString).permissions;
-  }
-  getImageUrl(filename: string){
-    return `http://localhost:3000/${filename}`
-  }
+ 
+  // getImageUrl(filename: string){
+  //   return `http://localhost:3000/${filename}`
+  // }
 
   
 

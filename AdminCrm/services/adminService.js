@@ -31,8 +31,8 @@ exports.addAdmin = async (adminDetails)=>{
         if(findAdminByEmail != null || findAdminByPhone != null){
             return false;
         }
-        await Admin.create(adminDetails)
-        return true;
+        const data = await Admin.create(adminDetails)
+        return data;
     } catch (error) {
         throw new Error("Error adding user enquiry"+error.message);
     }
