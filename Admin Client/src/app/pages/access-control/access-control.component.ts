@@ -50,21 +50,20 @@ export class AccessControlComponent {
     this.getAdminAccessControls();
     this.getAllPermissions();
 
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    const phoneNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    const passwordRegex = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,16}$/; 
+
     this.accessControlForm = this.fb.group({
       'first_name': ['', [Validators.required]],
       'last_name': ['', [Validators.required]],
-      'email': ['', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]],
-      'phone_number': ['', [Validators.required]],
-      'password': ['', Validators.required],
+      'email': ['', [Validators.required, Validators.pattern(emailRegex)]],
+      'phone_number': ['', [Validators.required, Validators.pattern(phoneNumberRegex)]],
+      'password': ['', [Validators.required, Validators.pattern(passwordRegex)]],
       'confirm_password': ['', Validators.required], 
       'permissions': [[], Validators.required], 
       'file': ['']
-
     });
-//  this.accessControlService.getAdmins().subscribe((data:any) => {
-//       console.log(data?.data);
-//     });
-  // this.getAllPermissions()
     
    
   }
@@ -307,16 +306,15 @@ export class AccessControlComponent {
       this.accessControlService.addAdmin(formData).subscribe(
         (response: any) => {
           console.log('Admin posted successfully:', response);
-          this.accessControlForm.reset()
-          // this.clearAddAdminForm();
-          // document.getElementById('closeAdminFormModel')?.click();
+          this.accessControlForm.reset();
+          this.getAdminAccessControls();
         },
         (error: any) => {
           console.log('error ' + error.message);
         }
       );
     } else {
-      // this.addAdminForm.markAllAsTouched();
+      this.accessControlForm.markAllAsTouched();
     }
   }
 
