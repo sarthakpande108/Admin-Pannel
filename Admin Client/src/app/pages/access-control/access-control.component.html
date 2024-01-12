@@ -261,6 +261,21 @@
     </nav>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <ng-template #showDetails>
   <div class="w-full flex flex-col mt-2.5 lg:mt-5">
     <!-- go back button -->
@@ -290,8 +305,6 @@
 
     <!-- user profile image -->
     <form 
-    [formGroup]="editAdminForm"
-    (submit)="onSubmitEditAdminForm()" 
       id="profileForm1" class="form bg-white p-5 rounded-lg h-max mt-5">
       <div class="flex hidden flex-row justify-between">
         <p class="text-lg font-bold capitalize">profile details</p>
@@ -642,7 +655,7 @@
             id="addNewWorkExperienceBtn"
             type="button"
             class="bg-[#2B447F] w-max hover:bg-[#223460] text-white px-10 py-2 rounded-lg"
-            (click)="onRemoveAdmin()"
+            (click)="removeAccessControl()"
           >
             Remove User
           </button>

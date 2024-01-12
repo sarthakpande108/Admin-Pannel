@@ -6,8 +6,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { environment } from 'src/app/environments/environment';
 
-import * as bcrypt from 'bcryptjs';
-
 declare let $: any;
 
 @Flowbite()
@@ -32,7 +30,6 @@ export class AccessControlComponent {
    
   ];
 
-
   adminAccessControls: any = [];
   permissionsData: any = [];
   selectedPermissionsData: any = [];
@@ -42,41 +39,17 @@ export class AccessControlComponent {
   selectedFile!: File;
   imageSrc!: string | ArrayBuffer;
 
+  
+  emailRegex = /^\S+@\S+\.\S+$/;
+  phoneNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  passwordRegex = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,16}$/; 
 
-  constructor(private accessControlService : AccessControlService, private fb: FormBuilder){}
-
-  ngOnInit() {
-    
-    this.getAdminAccessControls();
-    this.getAllPermissions();
-
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    const phoneNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-    const passwordRegex = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,16}$/; 
-
-    this.accessControlForm = this.fb.group({
-      'first_name': ['', [Validators.required]],
-      'last_name': ['', [Validators.required]],
-      'email': ['', [Validators.required, Validators.pattern(emailRegex)]],
-      'phone_number': ['', [Validators.required, Validators.pattern(phoneNumberRegex)]],
-      'password': ['', [Validators.required, Validators.pattern(passwordRegex)]],
-      'confirm_password': ['', Validators.required], 
-      'permissions': [[], Validators.required], 
-      'file': ['']
-    });
-    
-   
-  }
-
-
-
+// ---------------------------------------------------------------------------------------------
   getAdminAccessControls(){
     this.accessControlService.getAdmins().subscribe((data: any) => {
 
       this.adminAccessControls = [];
       this.adminAccessControls = data?.data;
-      console.log(this.permissionsData);
-      console.log(data.data);
     });
   }
 
@@ -85,200 +58,41 @@ export class AccessControlComponent {
 
       this.permissionsData = [];
       this.permissionsData = data?.data;
-      console.log(this.permissionsData);
-      console.log(data.data);
     });
   }
+// ---------------------------------------------------------------------------------------------
 
 
-   
+  constructor(private accessControlService : AccessControlService, private fb: FormBuilder){}
 
-  // addAdminForm: FormGroup = new FormGroup({
-  //   first_name: new FormControl('', [Validators.required]),
-  //   last_name: new FormControl('', [Validators.required]),
-  //   email: new FormControl('', [Validators.required, Validators.pattern(/^\S+@\S+\.\S+$/)]),
-  //   phone_number: new FormControl('', [Validators.required, Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (](\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s$/)]),
-  //   password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
-  //   confirm_password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
-  //   permissions: new FormControl([]),
-  //   file: new FormControl(null),
-  // })
+  ngOnInit() {
+  
+    this.getAdminAccessControls();
+    this.getAllPermissions();
 
-
-  // onPermissionChangeAdd(event:any){
-  //   this.selectedPermissionsData=event
-  //   console.log("selected permisssion",this.selectedPermissionsData)
-  //   this.addAdminForm.get('permissions')?.setValue(this.selectedPermissionsData);
-  //   console.log(this.addAdminForm.value);
-  // }
-
-
-  editAdminForm: FormGroup = new FormGroup({
-    first_name: new FormControl(''),
-    last_name: new FormControl(''),
-    phone_number: new FormControl('', [Validators.pattern(/^\s*(?:\+?(\d{1,3}))?[-. (](\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s$/)]),
-    permissions: new FormControl([]),
-    file: new FormControl(null),
-  })
-
-  onPermissionChangeEdit(event:any){
-    this.selectedPermissionsData2=event
-    console.log("selected permisssion",this.selectedPermissionsData2)
-    this.editAdminForm.value.permissions=this.selectedPermissionsData2;
-    console.log(this.editAdminForm.value);
-   }
-
+    this.accessControlForm = this.fb.group({
+      'first_name': ['', [Validators.required]],
+      'last_name': ['', [Validators.required]],
+      'email': ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+      'phone_number': ['', [Validators.required, Validators.pattern(this.phoneNumberRegex)]],
+      'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
+      'confirm_password': ['', Validators.required], 
+      'permissions': [[], Validators.required], 
+      'file': ['']
+    });
+  }
 
 
   verifyPasswordForm: FormGroup = new FormGroup({
     current_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
 
-  verifyPassword(){
-    if (this.verifyPasswordForm.valid) {
-      const current_password = this.verifyPasswordForm.get('current_password')?.value;
-      console.log(current_password);
-      this.accessControlService.verifyPassword(current_password, this.userDetails.id).subscribe((response:any) => {
-        // console.log(response);
-
-        if(response.data){
-          console.log("Password Verified");
-          this.verifiyPasswordToggle(false);
-          this.verifyPasswordForm.reset();
-        } else {
-          console.log("Unable to verify password");
-        }
-        // this.clearAddAdminForm();
-        // document.getElementById('closeAdminFormModel')?.click();
-        // this.router.navigate(['/']);
-      },
-      (error:any)=>{
-        console.log('error '+error.message);
-      });
-      // console.log(data);
-    } else {
-      this.verifyPasswordForm.markAllAsTouched();
-    }
-  }
-
   resetPasswordForm: FormGroup = new FormGroup({
     password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     confirm_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
 
-  resetPassword(){
-    if (this.resetPasswordForm.valid) {
-      const data = this.resetPasswordForm.value;
-      console.log(data);
-      this.accessControlService.resetPassword(data, this.userDetails.id).subscribe((response:any) => {
-        console.log('Passsword Reset successfully:', response);
-        this.resetPasswordForm.reset();
-        this.verifiyPasswordToggle(true);
-      },
-      (error:any)=>{
-        console.log('error '+error.message);
-      });
-      // console.log(data);
-    } else {
-      this.resetPasswordForm.markAllAsTouched();
-    }
-  }
-
-
-
-  // clearAddAdminForm() {
-  //   this.addAdminForm.reset({
-  //     first_name: '',
-  //     last_name: '',
-  //     email: '',
-  //     phone_number: '',
-  //     password: '',
-  //    });
-  // }
-
-  clearEditAdminForm() {
-    this.editAdminForm.reset({
-      first_name: '',
-      last_name: '',
-      phone_number: '',
-     });
-  }
-
-  clearVerifyPasswordForm() {
-    this.editAdminForm.reset({
-      first_name: '',
-      last_name: '',
-      phone_number: '',
-     });
-  }
-  clearResetPasswordForm() {
-    this.resetPasswordForm.reset({
-      password: '',
-      confirm_password: '',
-     });
-  }
-
-
-  // onSubmitAddAdminForm() {
-  //   if (this.addAdminForm.valid) {
-  //     const data = this.addAdminForm.value;
-  //     console.log(data);
-  //     this.accessControlService.addAdmin(data).subscribe((response:any) => {
-  //       console.log('Admin posted successfully:', response);
-  //       this.clearAddAdminForm();
-  //       document.getElementById('closeAdminFormModel')?.click();
-  //       // this.router.navigate(['/']);
-  //     },
-  //     (error:any)=>{
-  //       console.log('error '+error.message);
-  //     });
-  //     // console.log(data);
-  //   } else {
-  //     this.addAdminForm.markAllAsTouched();
-  //   }
-  // }
-
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-
-    if (file) {
-      this.accessControlForm.patchValue({ file });
-    }
-  }
-
-  // onSubmitAddAdminForm(): void {
-  //   if (this.addAdminForm.valid) {
-  //     const formData = new FormData();
-  //     formData.append('first_name', this.addAdminForm.get('first_name')?.value);
-  //     formData.append('last_name', this.addAdminForm.get('last_name')?.value);
-  //     formData.append('email', this.addAdminForm.get('email')?.value);
-  //     formData.append('phone_number', this.addAdminForm.get('phone_number')?.value);
-  //     formData.append('password', this.addAdminForm.get('password')?.value);
-  //     formData.append('confirm_password', this.addAdminForm.get('confirm_password')?.value);
-  //     formData.append('permissions', JSON.stringify(this.addAdminForm.get('permissions')?.value));
-
-  //     // Append file to FormData
-  //     const file = this.addAdminForm.get('file')?.value;
-  //     if (file instanceof File) {
-  //       formData.append('file', file);
-  //     }
-
-  //     this.accessControlService.addAdmin(formData).subscribe(
-  //       (response: any) => {
-  //         console.log('Admin posted successfully:', response);
-  //         this.clearAddAdminForm();
-  //         document.getElementById('closeAdminFormModel')?.click();
-  //       },
-  //       (error: any) => {
-  //         console.log('error ' + error.message);
-  //       }
-  //     );
-  //   } else {
-  //     this.addAdminForm.markAllAsTouched();
-  //   }
-  // }
-
-
+// ---------------------------------------------------------------------------------------------
   addAccessControl(): void {
     console.log(this.accessControlForm.valid)
     console.log(this.accessControlForm)
@@ -294,7 +108,6 @@ export class AccessControlComponent {
       // formData.append('file', file, file.name);
 
       // formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
-
 
 
       // Append file to FormData
@@ -316,127 +129,90 @@ export class AccessControlComponent {
     } else {
       this.accessControlForm.markAllAsTouched();
     }
+  } 
+
+  // SARTHAK UPDATE HERE
+  editAccessControl(): void {
+
   }
 
-  resetAccessControl(){
-    this.accessControlForm.reset()
-  }
-
-
-
-  onSubmitEditAdminForm() {
-    if (this.editAdminForm.valid) {
-      const data = this.editAdminForm.value;
-      console.log(data);
-      this.accessControlService.editAdmin(data, this.userDetails.id).subscribe((response:any) => {
-        console.log('Admin edited successfully:', response);
-        this.clearEditAdminForm();
-        this.enabelDisableForm(true);
-      },
-      (error:any)=>{
-        console.log('error '+error.message);
-      });
-    } else {
-      this.editAdminForm.markAllAsTouched();
-    }
-  }
-
-  onRemoveAdmin(){
+  removeAccessControl(){
     this.accessControlService.removeAdmin({},this.userDetails.id).subscribe((response:any) => {
       console.log('Admin removed successfully:', response);
       this.enabelDisableView(false);
+      this.getAdminAccessControls();
     },
     (error:any)=>{
       console.log('error '+error.message);
     });
   }
 
-  // onSubmitVerifyPasswordForm(){
-  //   this.verifyPasswordForm.markAllAsTouched();
-  //   if(this.verifyPasswordForm.valid){
-  //     if(this.userDetails.password == this.verifyPasswordForm.value.current_password){
-  //       this.verifiyPasswordToggle(false);
-  //       console.log("password verified");
-  //       this.verifyPasswordForm.reset();
-  //     } else {
-  //       console.log("Your password does not with current password");
-  //     }
-  //   } else {
-  //     console.log("Form is invalid");
-  //   }
-  // }
+  verifyPassword(){
+    if (this.verifyPasswordForm.valid) {
+      const current_password = this.verifyPasswordForm.get('current_password')?.value;
+      this.accessControlService.verifyPassword(current_password, this.userDetails.id).subscribe((response:any) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // hashPassword(password: string) {
-  //   const saltRounds = 10;
-  //   bcrypt.hash(password, saltRounds, (err:any, hash:any) => {
-  //     if (!err) {
-  //       return hash;
-  //     } else {
-  //       console.error('Error hashing password:', err);
-  //     }
-  //   });
-  // }
-
-  // comparePasswords(candidatePassword: string, hashedPassword: string) {
-  //   bcrypt.compare(candidatePassword, hashedPassword, (err:any, result:bool) => {
-  //     if (!err) {
-  //       if (result) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     } else {
-  //       console.error('Error comparing passwords:', err);
-  //     }
-  //   });
-  // }
-
-
-
-
-
-
-  displaySelectedFile(event: any): void {
-      const file: File = event.target.files[0];
-      if (file) {
-      this.selectedFile = file;
-
-      // Use FileReader to read and display the image
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        // Update the image source dynamically
-        this.imageSrc = e.target.result;
-      };
-      reader.readAsDataURL(file);
+        if(response.data){
+          console.log("Password Verified");
+          this.verifiyPasswordToggle(false);
+          this.verifyPasswordForm.reset();
+        } else {
+          console.log("Unable to verify password");
+        }
+      },
+      (error:any)=>{
+        console.log('error '+error.message);
+      });
+    } else {
+      this.verifyPasswordForm.markAllAsTouched();
     }
   }
 
+  resetPassword(){
+    if (this.resetPasswordForm.valid) {
+      const data = this.resetPasswordForm.value;
+      this.accessControlService.resetPassword(data, this.userDetails.id).subscribe((response:any) => {
+        console.log('Passsword Reset successfully:', response);
+        this.resetPasswordForm.reset();
+        this.verifiyPasswordToggle(true);
+      },
+      (error:any)=>{
+        console.log('error '+error.message);
+      });
+      // console.log(data);
+    } else {
+      this.resetPasswordForm.markAllAsTouched();
+    }
+  }
+// ---------------------------------------------------------------------------------------------
 
 
+
+
+
+// ---------------------------------------------------------------------------------------------
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.accessControlForm.patchValue({ file });
+    }
+  }
+
+  displaySelectedFile(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+    this.selectedFile = file;
+
+    // Use FileReader to read and display the image
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      // Update the image source dynamically
+      this.imageSrc = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  }
 
   getPermissionsByIds(jsonString: string) {
     const parsedJson = JSON.parse(jsonString);
@@ -446,48 +222,14 @@ export class AccessControlComponent {
       return permission ? permission.name : null;
     });
 
-    console.log(arr);
-  
     if (arr.length <= 3) return [arr, 0];
     return [arr.slice(0, 3), arr.length - 3];
   }
-  
-  
 
-
-
-  // getPermissions(jsonString: string) {
-  //   const arr = (JSON.parse(jsonString).permissions);
-  //   return [arr.slice(0,4),arr.length-3];
-  // }
-
-
-  // getPermissions(jsonString: string) {
-  //   const arr = JSON.parse(jsonString).permissions;
-  //   return [arr.slice(0,4),arr.length-3];
-  // }
-
- 
   getImageUrl(filename: string){
     return `${this.assetUrl}${filename}`
   }
 
-
-
-
-
-  
-
-  enabelDisableForm(val:any) {
-      this.disableForm1 = val
-  }
-
-  enabelDisableView(val:any) {
-      this.viewDetails = val
-  }
-
-
-  
   verifiyPasswordToggle(val:boolean) {
     this.passwordVerified = val
   }
@@ -495,7 +237,6 @@ export class AccessControlComponent {
   showUserDetails(val: boolean, data?: any) {
     this.userDetails = data;
     this.viewDetails = val;
-    console.log(this.userDetails);
 
     const parsedJson = JSON.parse(this.userDetails.admin_permissions);
     
@@ -503,19 +244,6 @@ export class AccessControlComponent {
       const permission = this.permissionsData.find((permission:any) => permission.id === id);
       return permission ? permission.name : null;
     });
-
-    
-    // this.userPermissions = (JSON.parse(this.userDetails.admin_permissions).permissions).map((i:number, index:number)=>{
-    //   return this.permissionsData[index].name;
-    // });
-    // console.log(this.userPermissions);
-
-
-
-    // $(document).ready(() => {
-    //   console.log($("#main-container")[0].offsetTop);
-    //   $("#main-container")[0].scrollTop = 0
-    // });
   }
 
   toggleModal() {
@@ -530,49 +258,16 @@ export class AccessControlComponent {
     }
   }
 
-  // this.AccessControlService.postData(data:any).subscribe((response:any) => {
-  //   console.log('Enterprise Enquiry posted successfully:', response);
-  //   this.clearForm();
-  //   document.getElementById('closeEnterpriseEnquiryModel')?.click();
-  //   // this.router.navigate(['/']);
-  // },
+  enabelDisableForm(val:any) {
+    this.disableForm1 = val
+  }
 
-  // accessControlData = [
-  //   {
-  //     id: "1",
-  //     profileImg: "../../../assets/assets/icons/Michael Cullen.svg",
-  //     name: "Amit Jadhwar",
-  //     email: "amit@gmail.com",
-  //     permissions: ["dashboard", "access control", "expert data"],
-  //     isActive: true
-  //   },
-  //   {
-  //     id: "2",
-  //     profileImg: "../../../assets/assets/icons/Michael Cullen.svg",
-  //     name: "Rushi Aher",
-  //     email: "rushi@gmail.com",
-  //     permissions: ["dashboard", "access control", "expert data"],
-  //     isActive: false
-  //   },
-  //   {
-  //     id: "3",
-  //     profileImg: "../../../assets/assets/icons/Michael Cullen.svg",
-  //     name: "Shalil Jaiswar",
-  //     email: "shalil@gmail.com",
-  //     permissions: ["dashboard", "access control", "expert data"],
-  //     isActive: true
-  //   },
-  //   {
-  //     id: "4",
-  //     profileImg: "../../../assets/assets/icons/Michael Cullen.svg",
-  //     name: "Juned",
-  //     email: "juned@gmail.com",
-  //     permissions: ["dashboard", "access control", "expert data"],
-  //     isActive: true
-  //   },
+  enabelDisableView(val:any) {
+    this.viewDetails = val
+  }
 
-  // ]
-
-
-  
+  resetAccessControl(){
+    this.accessControlForm.reset()
+  }
+// ---------------------------------------------------------------------------------------------
 }
