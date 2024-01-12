@@ -39,6 +39,8 @@ export class AccessControlComponent {
   selectedFile!: File;
   imageSrc!: string | ArrayBuffer;
 
+  profileImage: any;
+
   
   emailRegex = /^\S+@\S+\.\S+$/;
   phoneNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
@@ -106,15 +108,16 @@ export class AccessControlComponent {
       formData.append('password', password);
       formData.append('admin_permissions', JSON.stringify({permissions: permissions}));
       // formData.append('file', file, file.name);
-
-      // formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
+      
+      console.log(this.accessControlForm.get('file')?.value);
+      formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
 
 
       // Append file to FormData
       // const file = this.accessControlForm.get('file')?.value;
-      if (file instanceof File) {
-        formData.append('file', this.accessControlForm.get('file')?.value);
-      }
+      // if (file instanceof File) {
+      //   formData.append('file', this.accessControlForm.get('file')?.value);
+      // }
 
       this.accessControlService.addAdmin(formData).subscribe(
         (response: any) => {
@@ -192,17 +195,29 @@ export class AccessControlComponent {
 
 // ---------------------------------------------------------------------------------------------
   onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
+    
+    console.log(event.target.files);
+    const img = event.target?.files[0];
+    this.profileImage = img;
 
-    if (file) {
-      this.accessControlForm.patchValue({ file });
+    if (img) {
+      this.accessControlForm.patchValue({ file:img });
     }
   }
 
   displaySelectedFile(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-    this.selectedFile = file;
+
+    console.log(event.target.files);
+    const img = event.target?.files[0];
+    this.profileImage = img;
+
+    if (img) {
+      this.accessControlForm.patchValue({ file:img });
+    }
+
+    // const file: File = event.target.files[0];
+    // if (file) {
+    // this.selectedFile = file;
 
     // Use FileReader to read and display the image
     const reader = new FileReader();
@@ -210,8 +225,7 @@ export class AccessControlComponent {
       // Update the image source dynamically
       this.imageSrc = e.target.result;
     };
-    reader.readAsDataURL(file);
-  }
+    reader.readAsDataURL(img);
   }
 
   getPermissionsByIds(jsonString: string) {
@@ -227,7 +241,7 @@ export class AccessControlComponent {
   }
 
   getImageUrl(filename: string){
-    return `${this.assetUrl}${filename}`
+    return `${this.assetUrl}uploads/${filename}`
   }
 
   verifiyPasswordToggle(val:boolean) {
