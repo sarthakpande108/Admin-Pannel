@@ -305,6 +305,8 @@
 
     <!-- user profile image -->
     <form 
+      [formGroup]="accessControlForm2"
+      (submit)="editAccessControl()"
       id="profileForm1" class="form bg-white p-5 rounded-lg h-max mt-5">
       <div class="flex hidden flex-row justify-between">
         <p class="text-lg font-bold capitalize">profile details</p>
@@ -367,7 +369,7 @@
                     Photo
                   </p>
                 </div>
-                <input id="dropzone-file" type="file" class="hidden" />
+                <input id="dropzone-file" type="file" formControlName="file" class="hidden" (change)="onFileSelected($event)" />
               </label>
             </div>
           </div>

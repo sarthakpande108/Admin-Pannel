@@ -36,6 +36,7 @@ export class AccessControlComponent {
   selectedPermissionsData2: any = [];
   admin_permissions: any = [];
   accessControlForm!: FormGroup;
+  accessControlForm2!: FormGroup;
   selectedFile!: File;
   imageSrc!: string | ArrayBuffer;
 
@@ -80,6 +81,16 @@ export class AccessControlComponent {
       'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
       'confirm_password': ['', Validators.required], 
       'permissions': [[], Validators.required], 
+      'file': ['']
+    });
+    this.accessControlForm2 = this.fb.group({
+      'first_name': ['', [Validators.required]],
+      'last_name': ['', [Validators.required]],
+      // 'email': ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+      'phone_number': ['', [Validators.required, Validators.pattern(this.phoneNumberRegex)]],
+      // 'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
+      // 'confirm_password': ['', Validators.required], 
+      // 'permissions': [[], Validators.required], 
       'file': ['']
     });
   }
@@ -136,6 +147,35 @@ export class AccessControlComponent {
 
   // SARTHAK UPDATE HERE
   editAccessControl(): void {
+    console.log(this.accessControlForm2);
+    if(this.accessControlForm2.valid  && this.userDetails){
+      const formData= new FormData();
+      let{first_name,last_name,email,phone_number,password,permissions,file}=this.accessControlForm2.value;
+      formData.append('first_name',first_name);
+      formData.append('last_name',last_name);
+      formData.append('email',email);
+      formData.append('phone_number',phone_number);
+      formData.append('password',password);
+      formData.append('admin_permissions',JSON.stringify({permissions:permissions}));
+      // if(file instanceof File){
+      //   formData.append('file',file);
+      // }
+
+      console.log(this.accessControlForm2.get('file')?.value);
+      formData.append('file', this.accessControlForm2.get('file')?.value, this.accessControlForm2.get('file')?.value.name);
+
+      this.accessControlService.editAdmin(formData,this.userDetails.id).subscribe(
+        (response:any)=>{
+          console.log("admin updated successfully",response);
+          //this.viewDetails=false
+          this.getAdminAccessControls();
+        },
+        (error:any)=>{
+          console.log("error updating admin",error.message)
+        });
+    }else{
+      this.accessControlForm2.markAllAsTouched()
+    }
 
   }
 
