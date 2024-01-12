@@ -207,3 +207,43 @@ exports.resetAdminPassword = async (req, res) => {
     }
 
 }
+exports.verifyAdminPassword = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        // const data = req.body;
+
+        
+        const adminDetails = {
+            id: id,
+            password: req.body.current_password, 
+        }
+
+        const data = await adminService.verifyAdminPassword(adminDetails);
+        if (data == true) {
+            buildResponce(res, 200,
+                {
+                    error: false,
+                    message: "Admin password verified successfully! ",
+                    data: true
+                })
+        } else {
+            buildResponce(res, 200,
+                {
+                    error: true,
+                    message: "Admin does not exists!",
+                    data: false
+                })
+        }
+    } catch (error) {
+        console.log(error);
+
+        buildResponce(res, 500,
+            {
+                error: true,
+                message: "Internal Server Error",
+                data: false
+            })
+    }
+
+}

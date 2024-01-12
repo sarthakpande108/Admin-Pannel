@@ -28,6 +28,12 @@ export class AccessControlService {
     return this.http.post(`${environment.apiUrl}admin/deleteAdmin/${userid}`,data)
   }
 
+  verifyPassword(current_password:any,userid:any):Observable<any>{
+    console.log("data");
+    console.log({current_password:current_password});
+    return this.http.post(`${environment.apiUrl}admin/verifyAdminPassword/${userid}`,{current_password:current_password})
+  }
+
   resetPassword(data:any,userid:any){
     return this.http.post(`${environment.apiUrl}admin/resetAdminPassword/${userid}`,data)
   }

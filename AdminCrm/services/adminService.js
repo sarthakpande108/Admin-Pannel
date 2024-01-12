@@ -93,6 +93,33 @@ exports.resetAdminPassword = async (adminDetails)=>{
         throw new Error("Error adding user enquiry"+error.message);
     }
 }
+exports.verifyAdminPassword = async (adminDetails) => {
+    try {
+      const findAdminById = await Admin.findOne({
+        where: {
+          id: adminDetails.id
+        }
+      });
+  
+      if (findAdminById == null) {
+        return { data: false }; // Return an object with a data property
+      }
+
+      console.log("db body: ")
+      console.log(findAdminById.password)
+      console.log("req.body")
+      console.log(adminDetails.password)
+  
+      if (findAdminById.password === adminDetails.password) {
+        return true; // Return an object with a data property
+      } else {
+        return false; // Return an object with a data property
+      }
+    } catch (error) {
+      throw new Error("Error adding user enquiry" + error.message);
+    }
+  };
+  
 
 exports.deleteAdmin = async (id)=>{
 

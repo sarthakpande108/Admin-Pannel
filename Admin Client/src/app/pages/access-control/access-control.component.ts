@@ -23,7 +23,7 @@ export class AccessControlComponent {
   viewDetails: boolean = false;
   userDetails: any;
   userPermissions: any;
-  pswdVerified: boolean = true
+  passwordVerified: boolean = true
   disableForm1: boolean = true
   permissions:any = [
    
@@ -39,6 +39,10 @@ export class AccessControlComponent {
   selectedPermissionsData2: any = [];
   admin_permissions: any = [];
   accessControlForm!: FormGroup;
+  selectedFile!: File;
+  imageSrc!: string | ArrayBuffer;
+
+
   constructor(private accessControlService : AccessControlService, private fb: FormBuilder){}
 
   ngOnInit() {
@@ -102,7 +106,6 @@ export class AccessControlComponent {
   })
 
 
-
   onPermissionChangeAdd(event:any){
     this.selectedPermissionsData=event
     console.log("selected permisssion",this.selectedPermissionsData)
@@ -126,14 +129,61 @@ export class AccessControlComponent {
     console.log(this.editAdminForm.value);
    }
 
+
+
   verifyPasswordForm: FormGroup = new FormGroup({
     current_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
+
+  verifyPassword(){
+    if (this.verifyPasswordForm.valid) {
+      const current_password = this.verifyPasswordForm.get('current_password')?.value;
+      console.log(current_password);
+      this.accessControlService.verifyPassword(current_password, this.userDetails.id).subscribe((response:any) => {
+        // console.log(response);
+
+        if(response.data){
+          console.log("Password Verified");
+          this.verifiyPasswordToggle(false);
+          this.verifyPasswordForm.reset();
+        } else {
+          console.log("Unable to verify password");
+        }
+        // this.clearAddAdminForm();
+        // document.getElementById('closeAdminFormModel')?.click();
+        // this.router.navigate(['/']);
+      },
+      (error:any)=>{
+        console.log('error '+error.message);
+      });
+      // console.log(data);
+    } else {
+      this.verifyPasswordForm.markAllAsTouched();
+    }
+  }
 
   resetPasswordForm: FormGroup = new FormGroup({
     password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     confirm_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
+
+  resetPassword(){
+    if (this.resetPasswordForm.valid) {
+      const data = this.resetPasswordForm.value;
+      console.log(data);
+      this.accessControlService.resetPassword(data, this.userDetails.id).subscribe((response:any) => {
+        console.log('Passsword Reset successfully:', response);
+        this.resetPasswordForm.reset();
+        this.verifiyPasswordToggle(true);
+      },
+      (error:any)=>{
+        console.log('error '+error.message);
+      });
+      // console.log(data);
+    } else {
+      this.resetPasswordForm.markAllAsTouched();
+    }
+  }
 
 
 
@@ -299,39 +349,22 @@ export class AccessControlComponent {
     });
   }
 
-  onSubmitVerifyPasswordForm(){
-    this.verifyPasswordForm.markAllAsTouched();
-    if(this.verifyPasswordForm.valid){
-      if(this.userDetails.password == this.verifyPasswordForm.value.current_password){
-        this.verifiyOldPSWD(false);
-        console.log("password verified");
-        this.verifyPasswordForm.reset();
-      } else {
-        console.log("Your password does not with current password");
-      }
-    } else {
-      console.log("Form is invalid");
-    }
-  }
+  // onSubmitVerifyPasswordForm(){
+  //   this.verifyPasswordForm.markAllAsTouched();
+  //   if(this.verifyPasswordForm.valid){
+  //     if(this.userDetails.password == this.verifyPasswordForm.value.current_password){
+  //       this.verifiyPasswordToggle(false);
+  //       console.log("password verified");
+  //       this.verifyPasswordForm.reset();
+  //     } else {
+  //       console.log("Your password does not with current password");
+  //     }
+  //   } else {
+  //     console.log("Form is invalid");
+  //   }
+  // }
 
-  onSubmitResetPasswordForm(){
-    if (this.resetPasswordForm.valid) {
-      const data = this.resetPasswordForm.value;
-      console.log(data);
-      this.accessControlService.resetPassword(data, this.userDetails.id).subscribe((response:any) => {
-        console.log('Passsword Reset successfully:', response);
-        this.clearResetPasswordForm();
-        this.verifiyOldPSWD(true);
-        this.resetPasswordForm.reset();
-      },
-      (error:any)=>{
-        console.log('error '+error.message);
-      });
-      // console.log(data);
-    } else {
-      this.resetPasswordForm.markAllAsTouched();
-    }
-  }
+
 
 
 
@@ -385,6 +418,20 @@ export class AccessControlComponent {
 
 
 
+  displaySelectedFile(event: any): void {
+      const file: File = event.target.files[0];
+      if (file) {
+      this.selectedFile = file;
+
+      // Use FileReader to read and display the image
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        // Update the image source dynamically
+        this.imageSrc = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
 
 
@@ -439,8 +486,8 @@ export class AccessControlComponent {
 
 
   
-  verifiyOldPSWD(val:boolean) {
-    this.pswdVerified = val
+  verifiyPasswordToggle(val:boolean) {
+    this.passwordVerified = val
   }
 
   showUserDetails(val: boolean, data?: any) {
