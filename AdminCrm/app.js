@@ -34,8 +34,11 @@ const upload = multer({ storage: storage });
 
 // ----------------------------------------------------------------
 
-app.use(express.static('uploads')); 
-// app.use('/uploads', express.static('uploads'));
+// app.use(express.static('uploads')); 
+// app.use('/images', express.static(path.join(__dirname, 'uploads')));
+
+
+app.use('/uploads', express.static('uploads'));
 
 
 // Step 6: Set up a route to serve an HTML form for file uploads

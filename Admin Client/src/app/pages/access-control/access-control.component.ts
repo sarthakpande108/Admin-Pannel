@@ -33,7 +33,7 @@ export class AccessControlComponent {
   ];
 
 
-  adminsData: any = [];
+  adminAccessControls: any = [];
   permissionsData: any = [];
   selectedPermissionsData: any = [];
   selectedPermissionsData2: any = [];
@@ -43,6 +43,9 @@ export class AccessControlComponent {
 
   ngOnInit() {
     
+    this.getAdminAccessControls();
+    this.getAllPermissions();
+
     this.accessControlForm = this.fb.group({
       'first_name': ['', [Validators.required]],
       'last_name': ['', [Validators.required]],
@@ -50,7 +53,7 @@ export class AccessControlComponent {
       'phone_number': ['', [Validators.required]],
       'password': ['', Validators.required],
       'confirm_password': ['', Validators.required], 
-      'permissions': ['', Validators.required], 
+      'permissions': [[], Validators.required], 
       'file': ['']
 
     });
@@ -62,6 +65,18 @@ export class AccessControlComponent {
    
   }
 
+
+
+  getAdminAccessControls(){
+    this.accessControlService.getAdmins().subscribe((data: any) => {
+
+      this.adminAccessControls = [];
+      this.adminAccessControls = data?.data;
+      console.log(this.permissionsData);
+      console.log(data.data);
+    });
+  }
+
   getAllPermissions() {
     this.accessControlService.getPermissions().subscribe((data: any) => {
 
@@ -70,10 +85,8 @@ export class AccessControlComponent {
       console.log(this.permissionsData);
       console.log(data.data);
     });
-
-    
-
   }
+
 
    
 
@@ -228,7 +241,7 @@ export class AccessControlComponent {
       formData.append('email', email);
       formData.append('phone_number', phone_number);
       formData.append('password', password);
-      formData.append('permissions', permissions);
+      formData.append('admin_permissions', JSON.stringify({permissions: permissions}));
       // formData.append('file', file, file.name);
 
       formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
@@ -253,9 +266,10 @@ export class AccessControlComponent {
         }
       );
     } else {
-      this.addAdminForm.markAllAsTouched();
+      // this.addAdminForm.markAllAsTouched();
     }
   }
+
 
 
   onSubmitEditAdminForm() {
@@ -375,20 +389,43 @@ export class AccessControlComponent {
 
 
 
+  getPermissionsByIds(jsonString: string) {
+    const parsedJson = JSON.parse(jsonString);
+    
+    const arr = parsedJson.permissions.map((id: number) => {
+      const permission = this.permissionsData.find((permission:any) => permission.id === id);
+      return permission ? permission.name : null;
+    });
 
-
-
-
-
-  getPermissions(jsonString: string) {
-    const arr = JSON.parse(jsonString).permissions;
-    return [arr.slice(0,4),arr.length-3];
+    console.log(arr);
+  
+    if (arr.length <= 3) return [arr, 0];
+    return [arr.slice(0, 3), arr.length - 3];
   }
+  
+  
+
+
+
+  // getPermissions(jsonString: string) {
+  //   const arr = (JSON.parse(jsonString).permissions);
+  //   return [arr.slice(0,4),arr.length-3];
+  // }
+
+
+  // getPermissions(jsonString: string) {
+  //   const arr = JSON.parse(jsonString).permissions;
+  //   return [arr.slice(0,4),arr.length-3];
+  // }
 
  
-  // getImageUrl(filename: string){
-  //   return `http://localhost:3000/${filename}`
-  // }
+  getImageUrl(filename: string){
+    return `${this.assetUrl}${filename}`
+  }
+
+
+
+
 
   
 
@@ -410,11 +447,20 @@ export class AccessControlComponent {
     this.userDetails = data;
     this.viewDetails = val;
     console.log(this.userDetails);
+
+    const parsedJson = JSON.parse(this.userDetails.admin_permissions);
     
-    this.userPermissions = (JSON.parse(this.userDetails.admin_permissions).permissions).map((i:number, index:number)=>{
-      return this.permissionsData[index].name;
+    this.userPermissions = parsedJson.permissions.map((id: number) => {
+      const permission = this.permissionsData.find((permission:any) => permission.id === id);
+      return permission ? permission.name : null;
     });
-    console.log(this.userPermissions);
+
+    
+    // this.userPermissions = (JSON.parse(this.userDetails.admin_permissions).permissions).map((i:number, index:number)=>{
+    //   return this.permissionsData[index].name;
+    // });
+    // console.log(this.userPermissions);
+
 
 
     // $(document).ready(() => {

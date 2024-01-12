@@ -41,7 +41,7 @@ exports.getAllAdmins = async (req, res) => {
 exports.addAdmin = async (req, res) => {
 
     try {
-        const { first_name, last_name, email, phone_number, password, permissions} = req.body;
+        const { first_name, last_name, email, phone_number, password, admin_permissions} = req.body;
         const { filename } = req.file || "";
 
         // const hashedPassword = bcrypt.hashSync(password, salt);
@@ -53,7 +53,7 @@ exports.addAdmin = async (req, res) => {
             email: email,
             phone_number: phone_number,
             password: password,
-            admin_permissions: {"permissions": permissions},
+            admin_permissions: JSON.parse(admin_permissions),
             file: filename,
             is_active: true,
         }
@@ -90,7 +90,7 @@ exports.updateAdmin = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { first_name, last_name, phone_number, password, permissions } = req.body;
+        const { first_name, last_name, phone_number, password, admin_permissions } = req.body;
         
         // const hashedPassword = bcrypt.hashSync(password, salt);
 
@@ -100,7 +100,7 @@ exports.updateAdmin = async (req, res) => {
             last_name: last_name,
             phone_number: phone_number, 
             password: password, 
-            admin_permissions: {permissions: permissions}
+            admin_permissions: admin_permissions
         }
 
         const data = await adminService.updateAdmin(adminDetails);
