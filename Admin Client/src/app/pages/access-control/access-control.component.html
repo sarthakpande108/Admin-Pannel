@@ -119,29 +119,29 @@
           <td
             class="px-6 py-4 flex flex-nowrap min-w-max items-center gap-x-2 text-base font-medium"
           >
-            <div class="">
-              <div class="relative" *ngIf="items.isActive == true">
-                <img
-                  class="w-10 h-10 rounded-full inline-block"
-                  [src]="getImageUrl(items.file)"
-                  alt="Image remaining"
-                />
-                <span
-                  class="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"
-                ></span>
-              </div>
-
-              <div class="relative" *ngIf="items.isActive == false">
-                <img
-                  class="w-10 h-10 rounded-full inline-block"
-                  [src]="getImageUrl(items.file)"
-                  alt="Image remaining"
-                />
-                <span
-                  class="top-0 left-7 absolute w-3.5 h-3.5 bg-red-400 border-2 border-white rounded-full"
-                ></span>
-              </div>
+          <div class="mr-1">
+            <div class="relative w-full h-full" *ngIf="items.is_active == true">
+              <img
+                class="w-9 h-9 rounded-full inline-block"
+                src="https://img.icons8.com/office/40/person-male.png"
+                alt="Active Image"
+              />
+              <span
+                class="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"
+              ></span>
             </div>
+          
+            <div class="relative" *ngIf="items.is_active == false">
+              <img
+                class="w-9 h-9 rounded-full inline-block"
+                src="https://img.icons8.com/office/40/person-male.png"
+                alt="Inactive Image"
+              />
+              <span
+                class="top-0 left-7 absolute w-3.5 h-3.5 bg-red-400 border-2 border-white rounded-full"
+              ></span>
+            </div>
+          </div>
             <div class="">
               <h3 class="text-base font-medium text-black">
                 {{ items.first_name }} {{ items.last_name }}
