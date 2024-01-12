@@ -1,9 +1,25 @@
 const db = require('../models');
 const Admin  = db.admin;
+
+const bcrypt = require('bcryptjs');
+
+
 // const Sequelize = require('sequelize');
 
 // db.Sequelize = Sequelize;
 // db.sequelize = sequelize;
+
+function verifyPasswordSync(adminDetails, findAdminById) {
+    try {
+      const isVerified = bcrypt.compareSync(adminDetails.password, findAdminById.password);
+      return isVerified;
+    } catch (error) {
+      console.error('Error comparing passwords:', error);
+      return false;
+    }
+  }
+  
+
 
 exports.getAllAdmins = async ()=>{
     try {
@@ -93,6 +109,7 @@ exports.resetAdminPassword = async (adminDetails)=>{
         throw new Error("Error adding user enquiry"+error.message);
     }
 }
+
 exports.verifyAdminPassword = async (adminDetails) => {
     try {
       const findAdminById = await Admin.findOne({
@@ -102,19 +119,14 @@ exports.verifyAdminPassword = async (adminDetails) => {
       });
   
       if (findAdminById == null) {
-        return { data: false }; // Return an object with a data property
-      }
-
-      console.log("db body: ")
-      console.log(findAdminById.password)
-      console.log("req.body")
-      console.log(adminDetails.password)
-  
-      if (findAdminById.password === adminDetails.password) {
-        return true; // Return an object with a data property
-      } else {
         return false; // Return an object with a data property
       }
+
+      
+    const isPasswordCorrect = verifyPasswordSync(adminDetails, findAdminById);
+    return isPasswordCorrect;
+    
+
     } catch (error) {
       throw new Error("Error adding user enquiry" + error.message);
     }

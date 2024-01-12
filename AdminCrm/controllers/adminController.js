@@ -1,10 +1,13 @@
 const adminService = require('../services/adminService');
 const {buildResponce} = require('../helpers/buildResponce');
 const { admin } = require('../models');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
-// const saltRounds = 10;
-// const salt = bcrypt.genSaltSync(saltRounds);
+const saltRounds = 10;
+const salt = bcrypt.genSaltSync(saltRounds);
+
+// const bcrypt = require('bcrypt');
+// const saltRounds = 10; 
 
 
 
@@ -44,15 +47,16 @@ exports.addAdmin = async (req, res) => {
         const { first_name, last_name, email, phone_number, password, admin_permissions} = req.body;
         const { filename } = req.file || "";
 
-        // const hashedPassword = bcrypt.hashSync(password, salt);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
+        
 
         const adminDetails = {
             first_name: first_name,
             last_name: last_name,
             email: email,
             phone_number: phone_number,
-            password: password,
+            password: hashedPassword,
             admin_permissions: JSON.parse(admin_permissions),
             file: filename,
             is_active: true,
@@ -173,10 +177,13 @@ exports.resetAdminPassword = async (req, res) => {
     try {
         const { id } = req.params;
         const { password } = req.body;
+
+        
+        const hashedPassword = bcrypt.hashSync(password, salt);
         
         const adminDetails = {
             id: id,
-            password: password, 
+            password: hashedPassword, 
         }
 
         const data = await adminService.resetAdminPassword(adminDetails);
@@ -212,7 +219,6 @@ exports.verifyAdminPassword = async (req, res) => {
     try {
         const { id } = req.params;
         // const data = req.body;
-
         
         const adminDetails = {
             id: id,
@@ -220,6 +226,8 @@ exports.verifyAdminPassword = async (req, res) => {
         }
 
         const data = await adminService.verifyAdminPassword(adminDetails);
+        console.log("data : ");
+        console.log(data);
         if (data == true) {
             buildResponce(res, 200,
                 {
