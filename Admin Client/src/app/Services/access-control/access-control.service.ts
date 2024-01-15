@@ -17,10 +17,12 @@ export class AccessControlService {
   } 
 
   addAdmin(data:any):Observable<any>{
+    console.log("data : ", data);
     return this.http.post(`${environment.apiUrl}admin/addAdmin`,data)
   }
 
   editAdmin(data:any,userid:any):Observable<any>{
+    console.log("data in service: ", data);
     return this.http.post(`${environment.apiUrl}admin/updateAdmin/${userid}`,data)
   }
 

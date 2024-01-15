@@ -36,7 +36,7 @@ export class AccessControlComponent {
   selectedPermissionsData2: any = [];
   admin_permissions: any = [];
   accessControlForm!: FormGroup;
-  accessControlForm2!: FormGroup;
+  // accessControlForm2!: FormGroup;
   selectedFile!: File;
   imageSrc!: string | ArrayBuffer;
 
@@ -83,19 +83,26 @@ export class AccessControlComponent {
       'permissions': [[], Validators.required], 
       'file': ['']
     });
-    this.accessControlForm2 = this.fb.group({
-      'first_name': ['', [Validators.required]],
-      'last_name': ['', [Validators.required]],
-      // 'email': ['', [Validators.required, Validators.pattern(this.emailRegex)]],
-      'phone_number': ['', [Validators.required, Validators.pattern(this.phoneNumberRegex)]],
-      // 'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
-      // 'confirm_password': ['', Validators.required], 
-      // 'permissions': [[], Validators.required], 
-      'file': ['']
-    });
+    // this.accessControlForm2 = this.fb.group({
+    //   'first_name': [''],
+    //   'last_name': [''],
+    //   // 'email': ['', [Validators.required, Validators.pattern(this.emailRegex)]],
+    //   'phone_number': ['', [Validators.pattern(this.phoneNumberRegex)]],
+    //   // 'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
+    //   // 'confirm_password': ['', Validators.required], 
+    //   // 'permissions': [[], Validators.required], 
+    //   'file': ['']
+    // });
   }
 
 
+  accessControlForm2: FormGroup = new FormGroup({
+    first_name: new FormControl(''),
+    last_name: new FormControl(''),
+    phone_number: new FormControl(''),
+    file: new FormControl(null)
+    // admin_permissions: new FormControl({permissions: [1,2,3,4]})
+  })
   verifyPasswordForm: FormGroup = new FormGroup({
     current_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
@@ -149,26 +156,26 @@ export class AccessControlComponent {
   editAccessControl(): void {
     console.log(this.accessControlForm2);
     if(this.accessControlForm2.valid  && this.userDetails){
-      const formData= new FormData();
-      let{first_name,last_name,email,phone_number,password,permissions,file}=this.accessControlForm2.value;
-      formData.append('first_name',first_name);
-      formData.append('last_name',last_name);
-      formData.append('email',email);
-      formData.append('phone_number',phone_number);
-      formData.append('password',password);
-      formData.append('admin_permissions',JSON.stringify({permissions:permissions}));
+      // const formData= new FormData();
+      // console.log("this.accessControlForm2.value : ", this.accessControlForm2.value);
+      // let {first_name,last_name,phone_number} = this.accessControlForm2.value;
+      // formData.append('first_name',first_name);
+      // formData.append('last_name',last_name);
+      // formData.append('phone_number',phone_number);
+      // formData.append('admin_permissions',JSON.stringify({permissions:[1,2]}));
       // if(file instanceof File){
       //   formData.append('file',file);
       // }
 
-      console.log(this.accessControlForm2.get('file')?.value);
-      formData.append('file', this.accessControlForm2.get('file')?.value, this.accessControlForm2.get('file')?.value.name);
+      // console.log(this.accessControlForm2.get('file')?.value);
+      // formData.append('file', this.accessControlForm2.get('file')?.value, this.accessControlForm2.get('file')?.value.name);
 
-      this.accessControlService.editAdmin(formData,this.userDetails.id).subscribe(
+      this.accessControlService.editAdmin(this.accessControlForm2.value, this.userDetails.id).subscribe(
         (response:any)=>{
           console.log("admin updated successfully",response);
           //this.viewDetails=false
           this.getAdminAccessControls();
+          this.disableForm1 = !this.disableForm1;
         },
         (error:any)=>{
           console.log("error updating admin",error.message)

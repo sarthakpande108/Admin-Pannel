@@ -67,18 +67,18 @@ exports.updateAdmin = async (adminDetails)=>{
             return false;
         }
 
-        await Admin.update({
+        const updatedAdmin = await Admin.update({
             first_name: adminDetails.first_name,
             last_name: adminDetails.last_name,
             phone_number: adminDetails.phone_number,
-            password: adminDetails.password,
             admin_permissions: adminDetails.admin_permissions
         },{
             where: {
                 id: adminDetails.id
             }
         })
-        return true;
+        console.log(updatedAdmin);
+        return updatedAdmin;
     } catch (error) {
         throw new Error("Error adding user enquiry"+error.message);
     }

@@ -47,6 +47,8 @@ exports.addAdmin = async (req, res) => {
         const { first_name, last_name, email, phone_number, password, admin_permissions} = req.body;
         const { filename } = req.file || "";
 
+        console.log(req.body);
+
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         
@@ -83,7 +85,7 @@ exports.addAdmin = async (req, res) => {
         buildResponce(res, 500,
             {
                 error: true,
-                message: "Internal Server Error",
+                message: "Internal Server Error : "+error.message,
                 data: ''
             })
     }
@@ -94,8 +96,10 @@ exports.updateAdmin = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { first_name, last_name, phone_number, password, admin_permissions } = req.body;
+        const { first_name, last_name, phone_number, admin_permissions } = req.body;
         
+        console.log(req.body);
+
         // const hashedPassword = bcrypt.hashSync(password, salt);
 
         const adminDetails = {
@@ -103,17 +107,17 @@ exports.updateAdmin = async (req, res) => {
             first_name: first_name, 
             last_name: last_name,
             phone_number: phone_number, 
-            password: password, 
             admin_permissions: admin_permissions
         }
 
+        console.log(adminDetails);
         const data = await adminService.updateAdmin(adminDetails);
-        if (data != false) {
+        if (data) {
             buildResponce(res, 200,
                 {
                     error: false,
                     message: "Admin updated successfully! ",
-                    data: ''
+                    data: data
                 })
         } else {
             buildResponce(res, 200,
