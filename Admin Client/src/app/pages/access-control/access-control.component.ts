@@ -1,4 +1,5 @@
 import { Flowbite } from 'src/app/flowbite.decorator';
+import { HttpClient } from '@angular/common/http';
 
 import { AccessControlService } from 'src/app/Services/access-control/access-control.service';
 import { Component, OnInit } from '@angular/core';
@@ -31,14 +32,18 @@ export class AccessControlComponent {
   ];
 
   adminAccessControls: any = [];
+  adminAccessControlData:any=[];
   permissionsData: any = [];
   selectedPermissionsData: any = [];
   selectedPermissionsData2: any = [];
   admin_permissions: any = [];
   accessControlForm!: FormGroup;
+  accessControlForm2!: FormGroup; 
   // accessControlForm2!: FormGroup;
   selectedFile!: File;
+  editSelectedFile!:File
   imageSrc!: string | ArrayBuffer;
+  p: any = 1;
 
   profileImage: any;
 
@@ -61,12 +66,13 @@ export class AccessControlComponent {
 
       this.permissionsData = [];
       this.permissionsData = data?.data;
+      console.log(this.permissionsData)
     });
   }
 // ---------------------------------------------------------------------------------------------
 
 
-  constructor(private accessControlService : AccessControlService, private fb: FormBuilder){}
+  constructor(private accessControlService : AccessControlService, private fb: FormBuilder,private http: HttpClient){}
 
   ngOnInit() {
   
@@ -82,27 +88,23 @@ export class AccessControlComponent {
       'confirm_password': ['', Validators.required], 
       'permissions': [[], Validators.required], 
       'file': ['']
+    },{
+      validators: this.passwordMatchValidator
     });
-    // this.accessControlForm2 = this.fb.group({
-    //   'first_name': [''],
-    //   'last_name': [''],
-    //   // 'email': ['', [Validators.required, Validators.pattern(this.emailRegex)]],
-    //   'phone_number': ['', [Validators.pattern(this.phoneNumberRegex)]],
-    //   // 'password': ['', [Validators.required, Validators.pattern(this.passwordRegex)]],
-    //   // 'confirm_password': ['', Validators.required], 
-    //   // 'permissions': [[], Validators.required], 
-    //   'file': ['']
-    // });
+    
+    
+
+    this.accessControlForm2 = this.fb.group({
+      'first_name': [''],
+      'last_name': [''],
+      'phone_number': [''],
+      'permissions': [[]], 
+      'file': ['']
+    })
   }
 
 
-  accessControlForm2: FormGroup = new FormGroup({
-    first_name: new FormControl(''),
-    last_name: new FormControl(''),
-    phone_number: new FormControl(''),
-    file: new FormControl(null)
-    // admin_permissions: new FormControl({permissions: [1,2,3,4]})
-  })
+
   verifyPasswordForm: FormGroup = new FormGroup({
     current_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
@@ -111,6 +113,19 @@ export class AccessControlComponent {
     password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)]),
     confirm_password: new FormControl('',  [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/)])
   })
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirm_password')?.value;
+  
+    return password === confirmPassword ? null : { 'passwordMismatch': true };
+  }
+  get isConfirmPasswordInvalid() {
+    return (
+      this.accessControlForm.hasError('passwordMismatch') &&
+      this.accessControlForm.get('confirm_password')?.dirty
+    );
+  }
+
 
 // ---------------------------------------------------------------------------------------------
   addAccessControl(): void {
@@ -126,17 +141,9 @@ export class AccessControlComponent {
       formData.append('password', password);
       formData.append('admin_permissions', JSON.stringify({permissions: permissions}));
       // formData.append('file', file, file.name);
-      
-      console.log(this.accessControlForm.get('file')?.value);
-      formData.append('file', this.accessControlForm.get('file')?.value, this.accessControlForm.get('file')?.value.name);
-
-
-      // Append file to FormData
-      // const file = this.accessControlForm.get('file')?.value;
-      // if (file instanceof File) {
-      //   formData.append('file', this.accessControlForm.get('file')?.value);
-      // }
-
+      if (this.selectedFile){
+        formData.append('file', this.selectedFile);
+      }
       this.accessControlService.addAdmin(formData).subscribe(
         (response: any) => {
           console.log('Admin posted successfully:', response);
@@ -153,24 +160,31 @@ export class AccessControlComponent {
   } 
 
   // SARTHAK UPDATE HERE
+
+
+
+
   editAccessControl(): void {
     console.log(this.accessControlForm2);
     if(this.accessControlForm2.valid  && this.userDetails){
-      // const formData= new FormData();
-      // console.log("this.accessControlForm2.value : ", this.accessControlForm2.value);
-      // let {first_name,last_name,phone_number} = this.accessControlForm2.value;
-      // formData.append('first_name',first_name);
-      // formData.append('last_name',last_name);
-      // formData.append('phone_number',phone_number);
-      // formData.append('admin_permissions',JSON.stringify({permissions:[1,2]}));
-      // if(file instanceof File){
-      //   formData.append('file',file);
-      // }
+      const updatedPermissions = this.accessControlForm2.get('permissions')?.value;
+      const updatedAdminData = {
+        ...this.accessControlForm2.value,
+        admin_permissions: JSON.stringify({ permissions: updatedPermissions })
+      }
+      const formData=new FormData();
+      formData.append('first_name', this.accessControlForm2.get('first_name')?.value);
+      formData.append('last_name', this.accessControlForm2.get('last_name')?.value);
+      formData.append('phone_number',this.accessControlForm2.get('phone_number')?.value);
+      formData.append('password', this.accessControlForm2.get('password')?.value);
+      formData.append('admin_permissions', JSON.stringify({permissions: (this.accessControlForm2.get('permissions')?.value)}));
 
-      // console.log(this.accessControlForm2.get('file')?.value);
-      // formData.append('file', this.accessControlForm2.get('file')?.value, this.accessControlForm2.get('file')?.value.name);
-
-      this.accessControlService.editAdmin(this.accessControlForm2.value, this.userDetails.id).subscribe(
+     console.log(this.selectedFile);
+     
+      if (this.selectedFile){
+        formData.append('file', this.selectedFile);
+       }
+      this.accessControlService.editAdmin(updatedAdminData, this.userDetails.id).subscribe(
         (response:any)=>{
           console.log("admin updated successfully",response);
           //this.viewDetails=false
@@ -183,9 +197,68 @@ export class AccessControlComponent {
     }else{
       this.accessControlForm2.markAllAsTouched()
     }
-
   }
 
+  onFileEdit(event:any):any {
+    const file = event.target.files && event.target.files[0];
+    if(file.size > 10485760){
+      alert('Image size should be less then 10MB')
+      return false;
+    } 
+    if (file) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      this.selectedFile=file
+
+    }
+    
+  }
+/*
+  editAccessControl(): void {
+    console.log(this.accessControlForm2);
+    if (this.accessControlForm2.valid && this.userDetails) {
+      const updatedPermissions = this.accessControlForm2.get('permissions')?.value;
+      
+      // Extract the form values
+      const updatedAdminData = {
+        ...this.accessControlForm2.value,
+        admin_permissions: JSON.stringify({ permissions: updatedPermissions }),
+      };
+  
+      // Create FormData object
+      const formData = new FormData();
+  
+      // Append other form data to FormData
+      Object.keys(updatedAdminData).forEach(key => {
+        formData.append(key, updatedAdminData[key]);
+      });
+  
+      // Check if a new file is selected and append it to FormData
+      const file = this.accessControlForm2.get('file')?.value;
+      if (file) {
+        formData.append('file', file, file.name);
+      }
+  
+      console.log(formData);
+  
+      // Make the HTTP request
+      this.accessControlService.editAdmin(formData, this.userDetails.id).subscribe(
+        (response: any) => {
+          console.log("Admin updated successfully", response);
+          this.getAdminAccessControls();
+          this.disableForm1 = !this.disableForm1;
+        },
+        (error: any) => {
+          console.log("Error updating admin", error.message);
+        }
+      );
+    } else {
+      this.accessControlForm2.markAllAsTouched();
+    }
+  }
+  
+ */
   removeAccessControl(){
     this.accessControlService.removeAdmin({},this.userDetails.id).subscribe((response:any) => {
       console.log('Admin removed successfully:', response);
@@ -234,59 +307,59 @@ export class AccessControlComponent {
       this.resetPasswordForm.markAllAsTouched();
     }
   }
+// --------------------------------------------------------------------------------------
+searchByName(e: any) {
+  let str = e.target.value.toLowerCase();
+  this.adminAccessControls = this.adminAccessControls.filter(
+    (profile: any) => 
+      profile.first_name.toLowerCase().includes(str) || 
+      profile.last_name.toLowerCase().includes(str)
+  );
+}
 // ---------------------------------------------------------------------------------------------
-
-
-
-
-
-// ---------------------------------------------------------------------------------------------
-  onFileSelected(event: any): void {
-    
+  
+onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] as File;
     console.log(event.target.files);
     const img = event.target?.files[0];
     this.profileImage = img;
 
     if (img) {
+      const fileName=img.name
+      console.log('Selected file name:', fileName);
       this.accessControlForm.patchValue({ file:img });
     }
   }
 
   displaySelectedFile(event: any): void {
-
-    console.log(event.target.files);
-    const img = event.target?.files[0];
-    this.profileImage = img;
-
-    if (img) {
-      this.accessControlForm.patchValue({ file:img });
-    }
-
-    // const file: File = event.target.files[0];
-    // if (file) {
-    // this.selectedFile = file;
-
-    // Use FileReader to read and display the image
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      // Update the image source dynamically
-      this.imageSrc = e.target.result;
-    };
-    reader.readAsDataURL(img);
+   
+  
+      this.selectedFile = event.target.files[0] as File;
+  
+      if (this.selectedFile) {
+        const fileName = this.selectedFile.name;
+        console.log('Selected file name:', fileName);
+  
+        // Display the selected image
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imageSrc = e.target.result;
+          this.accessControlForm.patchValue({ file: this.selectedFile });
+        };
+        reader.readAsDataURL(this.selectedFile);}
+  
   }
+     getPermissionsByIds(jsonString: string) {
+        const parsedJson = JSON.parse(JSON.parse(jsonString));
+        const permissionsArray = parsedJson.permissions;
+        const arr = permissionsArray.map((id: number) => {
 
-  getPermissionsByIds(jsonString: string) {
-    const parsedJson = JSON.parse(jsonString);
-    
-    const arr = parsedJson.permissions.map((id: number) => {
-      const permission = this.permissionsData.find((permission:any) => permission.id === id);
-      return permission ? permission.name : null;
-    });
-
-    if (arr.length <= 3) return [arr, 0];
-    return [arr.slice(0, 3), arr.length - 3];
-  }
-
+          const permission = this.permissionsData.find((permission: any) => permission.id === id);
+          return permission ? permission.name : "";
+        });
+        if (arr.length <= 3) return [arr,0];
+       else return [arr.slice(0, 3), arr.length - 3];
+      }
   getImageUrl(filename: string){
     return `${this.assetUrl}uploads/${filename}`
   }
@@ -295,18 +368,28 @@ export class AccessControlComponent {
     this.passwordVerified = val
   }
 
+  
   showUserDetails(val: boolean, data?: any) {
-    this.userDetails = data;
-    this.viewDetails = val;
+    if (data) {
+      this.userDetails = data;
+      this.viewDetails = val;
 
-    const parsedJson = JSON.parse(this.userDetails.admin_permissions);
+  
+      const parsedJson = JSON.parse(JSON.parse(this.userDetails.admin_permissions));
     
-    this.userPermissions = parsedJson.permissions.map((id: number) => {
-      const permission = this.permissionsData.find((permission:any) => permission.id === id);
-      return permission ? permission.name : null;
-    });
-  }
 
+        this.userPermissions = parsedJson.permissions.map((id: number) => {
+          console.log(this.permissionsData)
+          const permission = this.permissionsData.find((permission: any) => permission.id === id);
+          return permission ? permission.name : null;
+      
+        });
+        
+      
+    }
+  }
+  
+  
   toggleModal() {
     console.log("clicked");
     if ($("#adduserModal").hasClass('hidden')) {

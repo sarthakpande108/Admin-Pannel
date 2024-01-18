@@ -59,7 +59,7 @@ exports.addAdmin = async (req, res) => {
             email: email,
             phone_number: phone_number,
             password: hashedPassword,
-            admin_permissions: JSON.parse(admin_permissions),
+            admin_permissions:admin_permissions,
             file: filename,
             is_active: true,
         }
@@ -97,8 +97,10 @@ exports.updateAdmin = async (req, res) => {
     try {
         const { id } = req.params;
         const { first_name, last_name, phone_number, admin_permissions } = req.body;
+        const { filename } = req.file || "";
         
         console.log(req.body);
+        console.log(filename)
 
         // const hashedPassword = bcrypt.hashSync(password, salt);
 
@@ -107,7 +109,8 @@ exports.updateAdmin = async (req, res) => {
             first_name: first_name, 
             last_name: last_name,
             phone_number: phone_number, 
-            admin_permissions: admin_permissions
+            admin_permissions: admin_permissions,
+            file:filename
         }
 
         console.log(adminDetails);

@@ -21,6 +21,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +40,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserProjectsComponent,
     LoginComponent,
 
+
   ],
   imports: [
     BrowserModule,
@@ -45,7 +49,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     NgSelectModule,
     NgxPaginationModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
